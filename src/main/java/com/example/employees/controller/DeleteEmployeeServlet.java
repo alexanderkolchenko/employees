@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class DeleteEmployeeServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
         EmployeeDao.deleteEmployeeByID(id);
