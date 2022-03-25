@@ -5,7 +5,6 @@ import com.example.employees.model.Employee;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
@@ -21,7 +20,7 @@ public class EditEmployeeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
 

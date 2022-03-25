@@ -3,11 +3,8 @@ package com.example.employees.controller;
 import com.example.employees.dao.EmployeeDao;
 import com.example.employees.model.Employee;
 
-import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class AddEmployeeServlet extends HttpServlet {
     @Override
