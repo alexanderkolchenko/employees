@@ -2,7 +2,6 @@ package com.example.employees.controller;
 
 import com.example.employees.dao.EmployeeDao;
 import com.example.employees.model.Employee;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.util.NoSuchElementException;
 public class EditEmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
 
@@ -21,6 +21,7 @@ public class EditEmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
 

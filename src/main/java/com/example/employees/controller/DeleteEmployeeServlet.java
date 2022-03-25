@@ -1,8 +1,6 @@
 package com.example.employees.controller;
 
 import com.example.employees.dao.EmployeeDao;
-
-import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 
