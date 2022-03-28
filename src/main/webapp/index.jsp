@@ -34,8 +34,10 @@
         .users a {
             text-decoration: none;
         }
+
         .users span {
-            text-align: right;
+            float: right;
+            margin-right: 5%;
         }
     </style>
 </head>
@@ -43,11 +45,14 @@
 <%
     ArrayList<Employee> employees = EmployeeDao.getEmployeesList();
     request.setAttribute("employees", employees);
-    String header = response.getHeader("User");
-    response.setHeader("User", header == null ? "user" : header);
+    String user = response.getHeader("User");
+    if (user == null) {
+        response.setHeader("User", "user");
+    }
+    request.setAttribute("User", user);
 %>
 
-
+<c:set var="user" scope="request" value="${User}"/>
 <div class="users">
     <a href="set_user_permission_servlet">
         <button>User Imitation</button>
@@ -55,6 +60,7 @@
     <a href="set_admin_permission_servlet">
         <button>Admin Imitation</button>
     </a>
+    <span>Вы вошли как <c:out value="${user}"/> </span>
 </div>
 
 <table>
