@@ -9,7 +9,7 @@
     <title>Employees</title>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <style>
-        table {
+        table, .users {
             font-family: arial, sans-serif;
             border-collapse: collapse;
             width: 80%;
@@ -22,11 +22,20 @@
             text-align: left;
             padding: 8px;
         }
+
         button {
             width: 120px;
         }
+
         .edit_button {
             border: none;
+        }
+
+        .users a {
+            text-decoration: none;
+        }
+        .users span {
+            text-align: right;
         }
     </style>
 </head>
@@ -34,7 +43,20 @@
 <%
     ArrayList<Employee> employees = EmployeeDao.getEmployeesList();
     request.setAttribute("employees", employees);
+    String header = response.getHeader("User");
+    response.setHeader("User", header == null ? "user" : header);
 %>
+
+
+<div class="users">
+    <a href="set_user_permission_servlet">
+        <button>User Imitation</button>
+    </a>
+    <a href="set_admin_permission_servlet">
+        <button>Admin Imitation</button>
+    </a>
+</div>
+
 <table>
     <tr>
         <th>#</th>
@@ -58,9 +80,9 @@
             <td>${employee.city}</td>
 
             <td class="edit_button">
-                    <a href="edit_employee_servlet/${employee.id}">
-                        <button class="edit_btn" type="submit">Edit employee</button>
-                    </a>
+                <a href="edit_employee_servlet/${employee.id}">
+                    <button class="edit_btn" type="submit">Edit employee</button>
+                </a>
             </td>
         </tr>
     </c:forEach>
@@ -69,5 +91,5 @@
 
 <a href="cookie_employee_servlet">Cookie</a><br>
 <a href="send_file_servlet">Send file</a>
-</>
+</body>
 </html>

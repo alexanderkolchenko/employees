@@ -13,9 +13,10 @@ public class EditEmployeeServlet extends HttpServlet {
 
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
-
         Employee e = EmployeeDao.getEmployeeByID(id).orElseThrow(NoSuchElementException::new);
         request.setAttribute("employee", e);
+        System.out.println("edit page "  + request.getHeader("User"));
+
         request.getRequestDispatcher("/edit_employee.jsp").forward(request, response);
     }
 

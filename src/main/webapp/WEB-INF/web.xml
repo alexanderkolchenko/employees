@@ -3,8 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-
-
+    <filter>
+        <filter-name>UserFilter</filter-name>
+        <filter-class>com.example.employees.controller.filters.UserFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UserFilter</filter-name>
+        <url-pattern>/edit_employee_servlet/*</url-pattern>
+        <url-pattern>/add_employee</url-pattern>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>AddEmployeeServlet</servlet-name>
@@ -88,11 +95,30 @@
             <file-size-threshold>1048576</file-size-threshold>
         </multipart-config>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>FileServlet</servlet-name>
         <url-pattern>/send_file_servlet</url-pattern>
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>SetUserPermissionServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.permission.SetUserPermissionServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SetUserPermissionServlet</servlet-name>
+        <url-pattern>/set_user_permission_servlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SetAdminPermissionServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.permission.SetAdminPermissionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SetAdminPermissionServlet</servlet-name>
+        <url-pattern>/set_admin_permission_servlet</url-pattern>
+    </servlet-mapping>
 
 </web-app>
