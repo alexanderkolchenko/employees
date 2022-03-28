@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Add Employee</title>
+    <title>Edit Employee</title>
     <style>
         #container {
             font-family: arial, sans-serif;

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Employees</title>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <style>
         table {
@@ -59,7 +59,7 @@
 
             <td class="edit_button">
                     <a href="edit_employee_servlet/${employee.id}">
-                        <button class="edit_btn"type="submit">Edit employee</button>
+                        <button class="edit_btn" type="submit">Edit employee</button>
                     </a>
             </td>
         </tr>

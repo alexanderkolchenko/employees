@@ -4,15 +4,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-    <servlet>
-        <servlet-name>Employees</servlet-name>
-        <servlet-class>com.example.employees.controller.EmployeeServlet</servlet-class>
-    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>Employees</servlet-name>
-        <url-pattern>/employees</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>AddEmployeeServlet</servlet-name>
