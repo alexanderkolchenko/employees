@@ -51,9 +51,48 @@
         <servlet-class>com.example.employees.controller.DeleteEmployeeServlet</servlet-class>
     </servlet>
 
+
     <servlet-mapping>
         <servlet-name>DeleteEmployeeServlet</servlet-name>
         <url-pattern>/delete_employee_servlet/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CookieEmployeeServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.cookies_and_files.CookieEmployeeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CookieEmployeeServlet</servlet-name>
+        <url-pattern>/cookie_employee_servlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetCookieServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.cookies_and_files.GetCookieServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetCookieServlet</servlet-name>
+        <url-pattern>/get_cookie_servlet/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.cookies_and_files.FileServlet</servlet-class>
+        <multipart-config>
+            <location>C:\Users\User\Desktop\employees</location>
+            <max-file-size>20848820</max-file-size>
+            <max-request-size>418018841</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/send_file_servlet</url-pattern>
+    </servlet-mapping>
+
+
 
 </web-app>

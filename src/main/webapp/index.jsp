@@ -67,5 +67,7 @@
 </table>
 
 
-</body>
+<a href="cookie_employee_servlet">Cookie</a><br>
+<a href="send_file_servlet">Send file</a>
+</>
 </html>
