@@ -9,7 +9,6 @@ import java.io.IOException;
 public class AddEmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String position = request.getParameter("position");

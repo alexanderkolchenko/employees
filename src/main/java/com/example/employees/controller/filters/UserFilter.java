@@ -20,6 +20,7 @@ public class UserFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+
         PrintWriter writer = response.getWriter();
 
         HttpServletRequest req = (HttpServletRequest) request;
@@ -27,14 +28,18 @@ public class UserFilter implements Filter {
 
         Map<String, Cookie> map = new HashMap<>();
 
+        System.out.println(request.getAttribute("User") + " before filter");
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {
             map.put(cookie.getName(), cookie);
         }
         if (map.get("User").getValue().equals("admin")) {
+            ((HttpServletResponse) response).setHeader("User", "admin");
             chain.doFilter(request, response);
         } else {
             writer.println("You don't have permission");
         }
     }
+
+
 }

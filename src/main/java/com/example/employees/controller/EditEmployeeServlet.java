@@ -2,6 +2,7 @@ package com.example.employees.controller;
 
 import com.example.employees.dao.EmployeeDao;
 import com.example.employees.model.Employee;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
@@ -15,9 +16,8 @@ public class EditEmployeeServlet extends HttpServlet {
         String id = uri.substring(uri.lastIndexOf("/") + 1);
         Employee e = EmployeeDao.getEmployeeByID(id).orElseThrow(NoSuchElementException::new);
         request.setAttribute("employee", e);
-        System.out.println("edit page "  + request.getHeader("User"));
-
         request.getRequestDispatcher("/edit_employee.jsp").forward(request, response);
+        System.out.println(response.getHeader("User"));
     }
 
     @Override
