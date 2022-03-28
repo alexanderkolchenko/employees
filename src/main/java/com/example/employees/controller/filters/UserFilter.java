@@ -27,8 +27,6 @@ public class UserFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
 
         Map<String, Cookie> map = new HashMap<>();
-
-        System.out.println(request.getAttribute("User") + " before filter");
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {
             map.put(cookie.getName(), cookie);
@@ -40,6 +38,4 @@ public class UserFilter implements Filter {
             writer.println("You don't have permission");
         }
     }
-
-
 }
