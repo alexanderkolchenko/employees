@@ -16,7 +16,6 @@ public class GetCookieServlet extends HttpServlet {
 
         Map<String, Cookie> map = new HashMap<>();
         Cookie[] cookies = request.getCookies();
-
         for (Cookie cookie : cookies) {
             map.put(cookie.getName(), cookie);
         }
@@ -24,10 +23,8 @@ public class GetCookieServlet extends HttpServlet {
         PrintWriter writer = response.getWriter();
         writer.println("<html>");
         writer.println("<p>" + map.get(id).getName() + " : " + map.get(id).getValue() + "</p>");
-
         writer.println("<a href=\"/employees_war_exploded\">Main Page</a><br>");
         writer.println("<a href=\"/employees_war_exploded/cookie_employee_servlet\">Back to cookies</a><br>");
         writer.println("</html>");
-
     }
 }

@@ -7,10 +7,21 @@
         <filter-name>UserFilter</filter-name>
         <filter-class>com.example.employees.controller.filters.UserFilter</filter-class>
     </filter>
+
     <filter-mapping>
         <filter-name>UserFilter</filter-name>
         <url-pattern>/edit_employee_servlet/*</url-pattern>
         <url-pattern>/add_employee</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>com.example.employees.controller.filters.LoginFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/login_filter</url-pattern>
     </filter-mapping>
 
     <servlet>
@@ -101,24 +112,13 @@
         <url-pattern>/send_file_servlet</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
-        <servlet-name>SetUserPermissionServlet</servlet-name>
-        <servlet-class>com.example.employees.controller.permission.SetUserPermissionServlet</servlet-class>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.LogoutServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>SetUserPermissionServlet</servlet-name>
-        <url-pattern>/set_user_permission_servlet</url-pattern>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout_servlet</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SetAdminPermissionServlet</servlet-name>
-        <servlet-class>com.example.employees.controller.permission.SetAdminPermissionServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SetAdminPermissionServlet</servlet-name>
-        <url-pattern>/set_admin_permission_servlet</url-pattern>
-    </servlet-mapping>
-
 </web-app>

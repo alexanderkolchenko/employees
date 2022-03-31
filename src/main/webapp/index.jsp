@@ -1,6 +1,8 @@
 <%@ page import="com.example.employees.dao.EmployeeDao" %>
 <%@ page import="com.example.employees.model.Employee" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.employees.model.User" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
@@ -30,38 +32,27 @@
         .edit_button {
             border: none;
         }
-
-        .users a {
-            text-decoration: none;
-        }
-
-        .users span {
-            float: right;
-            margin-right: 5%;
-        }
     </style>
 </head>
 <body>
 <%
     ArrayList<Employee> employees = EmployeeDao.getEmployeesList();
     request.setAttribute("employees", employees);
-    String user = response.getHeader("User");
-    if (user == null) {
-        user = "user";
-        response.setHeader("User", user);
+
+    String role = (String) request.getSession().getAttribute("role");
+    String login = (String) request.getSession().getAttribute("login");
+
+    Cookie cookie = Arrays.stream(request.getCookies()).filter(e -> e.getName().equals("userTime")).findFirst().orElse(null);
+
+    if (role == null || role.equals(User.ROLE.UNKNOWN.toString()) || cookie == null) {
+        response.sendRedirect("/employees_war_exploded/login.jsp");
     }
-    request.setAttribute("User", user);
+    request.setAttribute("login", login);
 %>
 
-<c:set var="user" scope="request" value="${User}"/>
+<c:set var="login" scope="request" value="${login}"/>
 <div class="users">
-    <a href="set_user_permission_servlet">
-        <button>User Imitation</button>
-    </a>
-    <a href="set_admin_permission_servlet">
-        <button>Admin Imitation</button>
-    </a>
-    <span>Вы вошли как <c:out value="${user}"/> </span>
+    <span>Вы вошли как <c:out value="${login}"/></span>
 </div>
 
 <table>
@@ -72,8 +63,8 @@
         <th>Должность</th>
         <th>E-mail</th>
         <th>Город</th>
-        <th class="edit_button "><a href="add_employee">
-            <button class="add_btn"> + Add Employee</button>
+        <th class="edit_button"><a href="add_employee">
+            <button class="add_btn btn"> + Add Employee</button>
         </a></th>
     </tr>
 
@@ -88,7 +79,7 @@
 
             <td class="edit_button">
                 <a href="edit_employee_servlet/${employee.id}">
-                    <button class="edit_btn" type="submit">Edit employee</button>
+                    <button class="edit_btn btn" type="submit">Edit employee</button>
                 </a>
             </td>
         </tr>
@@ -97,6 +88,20 @@
 
 
 <a href="cookie_employee_servlet">Cookie</a><br>
-<a href="send_file_servlet">Send file</a>
+<a href="send_file_servlet">Send file</a><br>
+<a href="logout_servlet">Log out</a><br>
+
+<script type="text/javascript">
+
+    let admin = '<%= request.getSession().getAttribute("role")%>';
+    if(admin!=='ADMIN') {
+        let buttons = document.getElementsByClassName('btn');
+        Array.prototype.forEach.call(buttons, function (el) {
+            el.style.display = "none";
+        })
+    }
+
+</script>
 </body>
+
 </html>
