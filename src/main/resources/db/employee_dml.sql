@@ -7,8 +7,4 @@ INSERT INTO employee(e_name, e_surname, e_position, e_email, e_city) VALUES('Joh
 INSERT INTO employee(e_name, e_surname, e_position, e_email, e_city) VALUES('Gosha', 'Petrov', 'Senior Developer', 'ipetrov@mail.ru', 'Moskow');
 
 
-INSERT into users (login, password) VALUES ('user', 'user');
-insert into users (login, password) values ('admin', 'admin');
 
-
-select * from users;
