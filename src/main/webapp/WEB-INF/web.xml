@@ -95,12 +95,11 @@
         <url-pattern>/get_cookie_servlet/*</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
-        <servlet-name>FileServlet</servlet-name>
-        <servlet-class>com.example.employees.controller.cookies_and_files.FileServlet</servlet-class>
+        <servlet-name>UploadFileServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.cookies_and_files.UploadFileServlet</servlet-class>
         <multipart-config>
-            <location>C:\Users\User\Desktop\employees</location>
+            <location>C:\Users\User\Desktop\employees\src\main\resources\files</location>
             <max-file-size>20848820</max-file-size>
             <max-request-size>418018841</max-request-size>
             <file-size-threshold>1048576</file-size-threshold>
@@ -108,8 +107,30 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>FileServlet</servlet-name>
+        <servlet-name>UploadFileServlet</servlet-name>
         <url-pattern>/send_file_servlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.cookies_and_files.DownloadFileServlet</servlet-class>
+       <!-- <multipart-config>
+            <location>C:\Users\User\Desktop\employees\src\main\resources\files</location>
+        </multipart-config>-->
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <url-pattern>/download_file_servlet/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ShowFilesForDownloadServlet</servlet-name>
+        <servlet-class>com.example.employees.controller.cookies_and_files.ShowFilesForDownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ShowFilesForDownloadServlet</servlet-name>
+        <url-pattern>/show_files_for_download_servlet</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -117,8 +138,12 @@
         <servlet-class>com.example.employees.controller.LogoutServlet</servlet-class>
     </servlet>
 
+
+
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout_servlet</url-pattern>
     </servlet-mapping>
+
+
 </web-app>
