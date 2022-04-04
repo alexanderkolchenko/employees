@@ -39,14 +39,15 @@ public class UploadFileServlet extends HttpServlet {
                 "<button type=\"submit\">Send file</button>" +
                 "</form><br>");
         writer.write("<a href=\"/employees_war_exploded\">Main Page</a><br>");
+        writer.write("<a href=\"/employees_war_exploded/show_files_for_download_servlet\">Get to Download Page</a><br>");
         writer.write("</html>");
         System.out.println(getCountFiles());
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         Part part = request.getPart("file");
-        String c = part.getSubmittedFileName();
         part.write(count + "_" + part.getSubmittedFileName());
         count++;
         setCountFiles(count);
@@ -54,6 +55,8 @@ public class UploadFileServlet extends HttpServlet {
                 "<html>" +
                         "The file uploaded successfully.<br>" +
                         "<a href=\"send_file_servlet\">Back</a>" +
+                        "<br>" +
+                        "<a href=\"/employees_war_exploded/show_files_for_download_servlet\">Get to Download Page</a><br>" +
                         "</html>");
     }
 

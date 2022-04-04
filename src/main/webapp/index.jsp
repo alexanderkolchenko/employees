@@ -88,7 +88,7 @@
 
 
 <a href="cookie_employee_servlet">Cookie</a><br><br>
-<a href="send_file_servlet">Send file</a><br>
+<a href="send_file_servlet">Upload file</a><br>
 <a href="show_files_for_download_servlet">Download file</a><br><br>
 <a href="logout_servlet">Log out</a><br>
 
