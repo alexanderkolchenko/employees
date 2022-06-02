@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -32,6 +33,7 @@ public class UploadFileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         PrintWriter writer = response.getWriter();
         writer.write("<html>");
         writer.write("<form action=\"send_file_servlet\" method=\"post\" enctype=\"multipart/form-data\">" +

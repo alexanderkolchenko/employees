@@ -27,4 +27,5 @@ public class GetCookieServlet extends HttpServlet {
         writer.println("<a href=\"/employees_war_exploded/cookie_employee_servlet\">Back to cookies</a><br>");
         writer.println("</html>");
     }
+
 }

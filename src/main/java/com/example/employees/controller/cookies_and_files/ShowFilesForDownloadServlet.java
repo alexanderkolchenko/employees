@@ -14,10 +14,10 @@ public class ShowFilesForDownloadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        System.out.println("doGet");
         try (PrintWriter writer = new PrintWriter(response.getWriter())) {
             String rPath = "/WEB-INF/classes/files";
             String aPath = getServletContext().getRealPath(rPath);
-            System.out.println(aPath);
             File file = new File(aPath);
 
             Set<String> listOfFiles = Stream.of(Objects.requireNonNull(file.listFiles()))
@@ -33,5 +33,10 @@ public class ShowFilesForDownloadServlet extends HttpServlet {
             writer.write("<a href=\"/employees_war_exploded/send_file_servlet\">Get to Upload Page</a><br>");
             writer.write("</html>");
         }
+    }
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.service(req, resp);
     }
 }

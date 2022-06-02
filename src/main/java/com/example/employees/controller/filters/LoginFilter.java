@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 public class LoginFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         PrintWriter writer = response.getWriter();
 
         final HttpServletResponse resp = (HttpServletResponse) response;
@@ -38,10 +38,13 @@ public class LoginFilter implements Filter {
             Cookie cookie = new Cookie("userTime", "value");
             cookie.setMaxAge(1800);
             resp.addCookie(cookie);
-
             session.setAttribute("login", user.getLogin());
             session.setAttribute("role", user.getRole().toString());
+           // chain.doFilter(request, response);
             resp.sendRedirect("/employees_war_exploded/index.jsp");
         }
     }
+
+
+
 }

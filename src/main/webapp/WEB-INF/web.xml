@@ -99,7 +99,7 @@
         <servlet-name>UploadFileServlet</servlet-name>
         <servlet-class>com.example.employees.controller.cookies_and_files.UploadFileServlet</servlet-class>
         <multipart-config>
-            <location>C:\Users\User\Desktop\employees\target\employees-1.0-SNAPSHOT\WEB-INF\classes\files</location>
+            <location>C:\Users\User\IdeaProjects\employees\target\WEB-INF\classes\files</location>
             <max-file-size>20848820</max-file-size>
             <max-request-size>418018841</max-request-size>
             <file-size-threshold>1048576</file-size-threshold>

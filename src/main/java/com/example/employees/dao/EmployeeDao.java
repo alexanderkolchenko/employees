@@ -9,25 +9,15 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class EmployeeDao {
-    private static final String URL = "jdbc:postgresql://localhost:5432/ee_db?characterEncoding=UTF-8";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "postgres";
+
     private static final String INSERT_EMPLOYEE = "INSERT INTO employee (e_name, e_surname, e_position, e_email, e_city) VALUES(?,?,?,?,?)";
     private static final String UPDATE_EMPLOYEE = "UPDATE employee SET e_name = ?, e_surname = ?, e_position = ?, e_email = ?, e_city = ? WHERE e_id =";
-
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static ArrayList<Employee> getEmployeesList() {
 
         ArrayList<Employee> employees = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionDao.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee ORDER BY e_id");
             ResultSet rs = statement.executeQuery();
@@ -43,7 +33,7 @@ public class EmployeeDao {
     }
 
     public static void addEmployees(Employee employee) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionDao.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT_EMPLOYEE);
             setParametersInStatement(statement, employee);
             statement.execute();
@@ -56,7 +46,7 @@ public class EmployeeDao {
 
         Employee employee = null;
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionDao.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE e_id =" + id);
             ResultSet rs = statement.executeQuery();
@@ -74,7 +64,7 @@ public class EmployeeDao {
 
         getEmployeeByID(String.valueOf(employee.getId())).orElseThrow(NoSuchElementException::new);
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionDao.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UPDATE_EMPLOYEE + employee.getId());
             setParametersInStatement(statement, employee);
             statement.execute();
@@ -87,7 +77,7 @@ public class EmployeeDao {
 
         getEmployeeByID(id).orElseThrow(NoSuchElementException::new);
 
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
+        try (Connection connection = ConnectionDao.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement("DELETE FROM employee WHERE e_id = " + id);
             statement.execute();
