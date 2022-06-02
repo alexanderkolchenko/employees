@@ -1,24 +1,27 @@
 package com.example.employees.dao;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionDao {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/ee_db?characterEncoding=UTF-8";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "postgres";
+    private static DataSource dataSource;
 
     static {
         try {
             Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
+            Context context = new InitialContext();
+            dataSource = (DataSource) context.lookup("java:comp/env/jdbc/employees");
+        } catch (ClassNotFoundException | NamingException e) {
             e.printStackTrace();
         }
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return dataSource.getConnection();
     }
 }

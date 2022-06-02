@@ -15,10 +15,11 @@ public class EmployeeDao {
 
     public static ArrayList<Employee> getEmployeesList() {
 
-        ArrayList<Employee> employees = new ArrayList<>();
+        ArrayList<Employee> employees = null;
 
         try (Connection connection = ConnectionDao.getConnection()) {
 
+            employees = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee ORDER BY e_id");
             ResultSet rs = statement.executeQuery();
 
@@ -105,14 +106,5 @@ public class EmployeeDao {
         s.setString(5, e.getCity());
     }
 
-    public static void checkParametersByEmployee(HttpServletRequest request) {
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
-        String position = request.getParameter("position");
-        String email = request.getParameter("email");
-        String city = request.getParameter("city");
-        if (name.equals("") || surname.equals("") || position.equals("") || email.equals("") || city.equals("")) {
-            throw new IllegalArgumentException();
-        }
-    }
+
 }

@@ -9,6 +9,7 @@ public class UserDao {
     private static final String FIND_USER = "SELECT login FROM users WHERE login = ? AND password = ?";
 
     public static User getUserRole(String login, String password) {
+
         User user = new User();
         user.setRole(User.ROLE.UNKNOWN);
         try (Connection connection = ConnectionDao.getConnection()) {

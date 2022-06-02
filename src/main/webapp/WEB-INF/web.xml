@@ -69,7 +69,6 @@
         <servlet-class>com.example.employees.controller.DeleteEmployeeServlet</servlet-class>
     </servlet>
 
-
     <servlet-mapping>
         <servlet-name>DeleteEmployeeServlet</servlet-name>
         <url-pattern>/delete_employee_servlet/*</url-pattern>
@@ -138,12 +137,16 @@
         <servlet-class>com.example.employees.controller.LogoutServlet</servlet-class>
     </servlet>
 
-
-
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout_servlet</url-pattern>
     </servlet-mapping>
 
+    <resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/employees</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 
 </web-app>
