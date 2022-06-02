@@ -113,9 +113,6 @@
     <servlet>
         <servlet-name>DownloadFileServlet</servlet-name>
         <servlet-class>com.example.employees.controller.cookies_and_files.DownloadFileServlet</servlet-class>
-       <!-- <multipart-config>
-            <location>C:\Users\User\Desktop\employees\src\main\resources\files</location>
-        </multipart-config>-->
     </servlet>
 
     <servlet-mapping>

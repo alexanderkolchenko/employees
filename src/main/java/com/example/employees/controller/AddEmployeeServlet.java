@@ -13,6 +13,7 @@ public class AddEmployeeServlet extends HttpServlet {
 
         Employee employee = createEmployeeFromRequest(request);
         EmployeeDao.addEmployees(employee);
+
         response.sendRedirect("/employees_war_exploded/index.jsp");
     }
 

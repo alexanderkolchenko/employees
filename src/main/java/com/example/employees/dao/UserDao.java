@@ -1,11 +1,14 @@
 package com.example.employees.dao;
 
 import com.example.employees.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 public class UserDao {
 
+    private final static Logger log = LoggerFactory.getLogger(UserDao.class);
     private static final String FIND_USER = "SELECT login FROM users WHERE login = ? AND password = ?";
 
     public static User getUserRole(String login, String password) {
@@ -27,7 +30,7 @@ public class UserDao {
                 user.setLogin(rs.getString("login"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return user;
     }
