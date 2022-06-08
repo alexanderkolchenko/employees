@@ -14,7 +14,6 @@ public class ShowFilesForDownloadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        System.out.println("doGet");
         try (PrintWriter writer = new PrintWriter(response.getWriter())) {
             String rPath = "/WEB-INF/classes/files";
             String aPath = getServletContext().getRealPath(rPath);

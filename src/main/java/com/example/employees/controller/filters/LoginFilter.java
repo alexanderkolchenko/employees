@@ -1,5 +1,6 @@
 package com.example.employees.controller.filters;
 
+import com.example.employees.dao.ConnectionDao;
 import com.example.employees.dao.UserDao;
 import com.example.employees.model.User;
 import org.slf4j.Logger;
@@ -18,9 +19,10 @@ import java.io.PrintWriter;
 public class LoginFilter implements Filter {
 
     private final static Logger log = LoggerFactory.getLogger(LoginFilter.class);
+    UserDao userDao = new UserDao();
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
         PrintWriter writer = response.getWriter();
 
         final HttpServletResponse resp = (HttpServletResponse) response;
@@ -29,7 +31,7 @@ public class LoginFilter implements Filter {
         final String login = req.getParameter("login");
         final String password = req.getParameter("password");
 
-        User user = UserDao.getUserRole(login, password);
+        User user = userDao.getUserRole(login, password);
 
         if (user.getRole().equals(User.ROLE.UNKNOWN)) {
             writer.println("<html>");

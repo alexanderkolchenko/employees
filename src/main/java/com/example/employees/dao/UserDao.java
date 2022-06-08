@@ -10,12 +10,17 @@ public class UserDao {
 
     private final static Logger log = LoggerFactory.getLogger(UserDao.class);
     private static final String FIND_USER = "SELECT login FROM users WHERE login = ? AND password = ?";
+    private static ConnectionDao connectionDao;
 
-    public static User getUserRole(String login, String password) {
+    static {
+        connectionDao = new ConnectionDao();
+    }
+
+    public User getUserRole(String login, String password) {
 
         User user = new User();
         user.setRole(User.ROLE.UNKNOWN);
-        try (Connection connection = ConnectionDao.getConnection()) {
+        try (Connection connection = connectionDao.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(FIND_USER);
             statement.setString(1, login);

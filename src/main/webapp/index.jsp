@@ -3,6 +3,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.employees.model.User" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="com.example.employees.dao.ConnectionDao" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
@@ -36,7 +37,8 @@
 </head>
 <body>
 <%
-    ArrayList<Employee> employees = EmployeeDao.getEmployeesList();
+    EmployeeDao dao = new EmployeeDao(new ConnectionDao());
+    ArrayList<Employee> employees = dao.getEmployeesList();
     request.setAttribute("employees", employees);
 
     String role = (String) request.getSession().getAttribute("role");

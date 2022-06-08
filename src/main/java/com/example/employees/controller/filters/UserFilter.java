@@ -24,5 +24,4 @@ public class UserFilter implements Filter {
             writer.println("You don't have permission");
         }
     }
-
 }

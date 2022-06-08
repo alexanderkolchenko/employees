@@ -1,6 +1,8 @@
 package com.example.employees.model;
+import java.util.Objects;
 
 public class Employee {
+
     private int id;
     private String name;
     private String surname;
@@ -65,5 +67,18 @@ public class Employee {
                 ", email='" + email + '\'' +
                 ", city='" + city + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee employee = (Employee) o;
+        return id == employee.id && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(position, employee.position) && Objects.equals(email, employee.email) && Objects.equals(city, employee.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, position, email, city);
     }
 }

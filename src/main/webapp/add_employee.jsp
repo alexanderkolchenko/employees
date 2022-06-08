@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 24.03.2022
-  Time: 16:38
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -34,7 +27,7 @@
 <div id="container">
     <form action="add_employee_servlet" method="post">
         <label for="fname">First name:</label><br>
-        <input type="text" id="fname" name="name" required><br>
+        <input type="text" id="fname" name="name" required ><br>
 
         <label for="lname">Last name:</label><br>
         <input type="text" id="lname" name="surname" required><br>

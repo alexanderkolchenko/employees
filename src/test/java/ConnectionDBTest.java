@@ -1,12 +1,11 @@
-package com.example.employees.dao;
-
+import com.example.employees.dao.ConnectionDB;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionDao implements ConnectionDB {
+public class ConnectionDBTest implements ConnectionDB {
 
     private static final HikariConfig config = new HikariConfig();
     private static final HikariDataSource dataSource;
@@ -17,7 +16,7 @@ public class ConnectionDao implements ConnectionDB {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/ee_db?characterEncoding=UTF-8");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/ee_db_test?characterEncoding=UTF-8");
         config.setUsername("postgres");
         config.setPassword("postgres");
         config.addDataSourceProperty("cachePrepStmts", "true");
@@ -26,6 +25,7 @@ public class ConnectionDao implements ConnectionDB {
         dataSource = new HikariDataSource(config);
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }

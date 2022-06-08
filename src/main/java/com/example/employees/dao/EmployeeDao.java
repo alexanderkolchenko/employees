@@ -6,25 +6,31 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class EmployeeDao {
     private final static Logger log = LoggerFactory.getLogger(EmployeeDao.class);
+    private ConnectionDB connectionDB;
     private static final String INSERT_EMPLOYEE = "INSERT INTO employee (e_name, e_surname, e_position, e_email, e_city) VALUES(?,?,?,?,?)";
     private static final String UPDATE_EMPLOYEE = "UPDATE employee SET e_name = ?, e_surname = ?, e_position = ?, e_email = ?, e_city = ? WHERE e_id =";
+    private static final String GET_EMPLOYEES = "SELECT * FROM employee ORDER BY e_id";
+    private static final String GET_EMPLOYEE_BY_ID = "SELECT * FROM employee WHERE e_id =";
+    private static final String DELETE_EMPLOYEE_BY_ID = "DELETE FROM employee WHERE e_id = ";
 
-    public static ArrayList<Employee> getEmployeesList() {
+    public EmployeeDao(ConnectionDB connection) {
+        this.connectionDB = connection;
+    }
+
+    //todo error page
+    public ArrayList<Employee> getEmployeesList() {
 
         ArrayList<Employee> employees = null;
 
-        try (Connection connection = ConnectionDao.getConnection()) {
-
+        try (Connection connection = connectionDB.getConnection()) {
             employees = new ArrayList<>();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee ORDER BY e_id");
+            PreparedStatement statement = connection.prepareStatement(GET_EMPLOYEES);
             ResultSet rs = statement.executeQuery();
-
             while (rs.next()) {
                 Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
                 employees.add(e);
@@ -35,8 +41,8 @@ public class EmployeeDao {
         return employees;
     }
 
-    public static void addEmployees(Employee employee) {
-        try (Connection connection = ConnectionDao.getConnection()) {
+    public void addEmployees(Employee employee) throws SQLException {
+        try (Connection connection = connectionDB.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT_EMPLOYEE);
             setParametersInStatementFromEmployee(statement, employee);
             statement.execute();
@@ -44,20 +50,17 @@ public class EmployeeDao {
                     employee.getName(),
                     employee.getSurname(),
                     employee.getPosition());
-        } catch (SQLException e) {
-            log.error("Error of connection while creating employee: {} ", e.getMessage());
         }
     }
 
-    public static Optional<Employee> getEmployeeByID(String id) {
+
+    public Optional<Employee> getEmployeeByID(String id) {
 
         Employee employee = null;
 
-        try (Connection connection = ConnectionDao.getConnection()) {
-
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE e_id =" + id);
+        try (Connection connection = connectionDB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(GET_EMPLOYEE_BY_ID + id);
             ResultSet rs = statement.executeQuery();
-
             while (rs.next()) {
                 employee = setParametersInEmployeeFromStatement(new Employee(), rs);
             }
@@ -67,11 +70,11 @@ public class EmployeeDao {
         return Optional.ofNullable(employee);
     }
 
-    public static void updateEmployees(Employee employee) {
+    public void updateEmployees(Employee employee) throws SQLException {
 
         Employee e = getEmployeeByID(String.valueOf(employee.getId())).orElseThrow(NoSuchElementException::new);
 
-        try (Connection connection = ConnectionDao.getConnection()) {
+        try (Connection connection = connectionDB.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UPDATE_EMPLOYEE + employee.getId());
             setParametersInStatementFromEmployee(statement, employee);
             statement.execute();
@@ -79,18 +82,16 @@ public class EmployeeDao {
             if (!changes.equals("")) {
                 log.info("Employee changed: database id - {}, fields: {} ", e.getId(), changes);
             }
-        } catch (SQLException exc) {
-            log.error("Error of connection while updating employee: {} ", exc.getMessage());
         }
     }
 
-    public static void deleteEmployeeByID(String id) {
+    public void deleteEmployeeByID(String id) {
 
         Employee e = getEmployeeByID(id).orElseThrow(NoSuchElementException::new);
 
-        try (Connection connection = ConnectionDao.getConnection()) {
+        try (Connection connection = connectionDB.getConnection()) {
 
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM employee WHERE e_id = " + e.getId());
+            PreparedStatement statement = connection.prepareStatement(DELETE_EMPLOYEE_BY_ID + e.getId());
             statement.execute();
             log.info("Employee deleted: name {}, surname - {}, position {}", e.getName(), e.getSurname(), e.getPosition());
         } catch (SQLException exc) {
