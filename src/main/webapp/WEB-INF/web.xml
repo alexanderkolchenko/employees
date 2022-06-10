@@ -3,6 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <context-param>
+        <param-name>name</param-name>
+        <param-value>value</param-value>
+    </context-param>
+
     <filter>
         <filter-name>UserFilter</filter-name>
         <filter-class>com.example.employees.controller.filters.UserFilter</filter-class>
@@ -37,6 +43,14 @@
     <servlet>
         <servlet-name>EditEmployeeServlet</servlet-name>
         <servlet-class>com.example.employees.controller.EditEmployeeServlet</servlet-class>
+        <init-param>
+            <param-name>version</param-name>
+            <param-value>17</param-value>
+        </init-param>
+        <init-param>
+            <param-name>not</param-name>
+            <param-value>17</param-value>
+        </init-param>
     </servlet>
 
     <servlet-mapping>

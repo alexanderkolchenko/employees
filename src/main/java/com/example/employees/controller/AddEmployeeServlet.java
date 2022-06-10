@@ -6,6 +6,7 @@ import com.example.employees.model.Employee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -71,5 +72,9 @@ public class AddEmployeeServlet extends HttpServlet {
         if (name.equals("") || surname.equals("") || position.equals("") || email.equals("") || city.equals("")) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public void test() {
+        System.out.println("test");
     }
 }

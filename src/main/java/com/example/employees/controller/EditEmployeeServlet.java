@@ -10,18 +10,24 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 public class EditEmployeeServlet extends HttpServlet {
 
     private final static Logger log = LoggerFactory.getLogger(EditEmployeeServlet.class);
     private static final EmployeeDao employeeDao;
+
     static {
         employeeDao = new EmployeeDao(new ConnectionDao());
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        ServletContext context = getServletContext();
+        context.createServlet(AddEmployeeServlet.class).test();
+
 
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
