@@ -4,114 +4,78 @@
 <%@ page import="com.example.employees.model.User" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="com.example.employees.dao.ConnectionDao" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Employees</title>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <style>
-        table, .users {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 80%;
-            margin: auto;
-            margin-top: 30px;
-        }
-
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        button {
-            width: 120px;
-        }
-
-        .edit_button {
-            border: none;
-        }
-
-        .default_sort_buttons,
-        .ascending_sort_buttons,
-        .descending_sort_buttons {
-            padding-left: 20%;
-            filter: invert(50%);
-            width: 14px;
-        }
-
-        .default_sort_buttons:hover,
-        .ascending_sort_buttons:hover,
-        .descending_sort_buttons:hover {
-            filter: invert(0%);
-        }
-
-        .hidden_element, .hidden_city, .hidden_position {
-            display: none;
-        }
-
-        .multiselect {
-            width: 130px;
-        }
-
-        .selectBox {
-            position: relative;
-        }
-
-        .selectBox select {
-            width: 130px;
-            /*font-weight: bold;*/
-        }
-
-        .overSelect {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
-
-        .checkboxes {
-            display: none;
-            border: 1px #dadada solid;
-            font-weight: normal;
-            font-size: 14px;
-            position: absolute;
-            background-color: white;
-            width: 130px;
-
-        }
-
-        .checkboxes label {
-            display: block;
-        }
-
-        /* #checkboxes label:hover {
-             background-color: #1e90ff;
-         }*/
-
-    </style>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
+<%!
+    String column;
+    String order;
+    int limit = 5;
+    int offset;
+    int pages;
+
+%>
 <%
+
     EmployeeDao dao = new EmployeeDao(new ConnectionDao());
-    ArrayList<Employee> employees = dao.getEmployeesList();
-    request.setAttribute("employees", employees);
+
+    int countRows = dao.getCountRows();
+
+    if (countRows % limit != 0) {
+        pages = countRows / limit + 1;
+    } else {
+        pages = countRows / limit;
+    }
+
+    int currentPage;
+
+    if (request.getParameter("page") == null || request.getParameter("page").equals("")) {
+        currentPage = 1;
+        request.setAttribute("page", "1");
+    } else {
+        currentPage = Integer.parseInt(request.getParameter("page"));
+    }
+
+    if (request.getParameter("sorting") == null || request.getParameter("sorting").equals("")) {
+        request.setAttribute("sorting", "id_asc");
+    } else  {
+        request.setAttribute("sorting", request.getParameter("sorting"));
+    }
+    pageContext.setAttribute("pages", pages);
+    offset = currentPage * 5 - 5;
+    String currentSort = request.getParameter("sorting");
+    if (currentSort != null) {
+        column = "e_" + currentSort.split("_")[0];
+        order = currentSort.split("_")[1].toUpperCase();
+    } else {
+        column = "e_id";
+        order = "ASC";
+    }
+
+    ArrayList<Employee> employees = dao.getEmployeesList(column, order, offset, limit);
+
+    pageContext.setAttribute("employees", employees);
 
     String role = (String) request.getSession().getAttribute("role");
     String login = (String) request.getSession().getAttribute("login");
-
     Cookie cookie = Arrays.stream(request.getCookies()).filter(e -> e.getName().equals("userTime")).findFirst().orElse(null);
 
     if (role == null || role.equals(User.ROLE.UNKNOWN.toString()) || cookie == null) {
         response.sendRedirect("/employees_war_exploded/login.jsp");
     }
+
     request.setAttribute("login", login);
 %>
 
-<c:set var="login" scope="request" value="${login}"/>
+<c:set var="login" scope="page" value="${login}"/>
+<c:set var="sorting" scope="request" value="${sorting}"/>
+
 <div class="users">
     <span>Вы вошли как <c:out value="${login}"/></span>
 </div>
@@ -167,14 +131,11 @@
 
         </th>
         <th>Город
-            <img class="default_sort_buttons" src="icons/up_down.png">
+            <a href="index.jsp?page=${param.page}&sorting=city_asc"><img class="default_sort_buttons"
+                                                                         src="icons/up_down.png"></a>
             <img class="ascending_sort_buttons hidden_element" src="icons/up.png">
             <img class="descending_sort_buttons hidden_element" src="icons/down.png">
             <br><br>
-
-            <%--   <option disabled hidden selected value=""/>
-               <option>Samara</option>
-               <option>Volgograd</option>--%>
             <form id="form_city">
                 <div class="multiselect">
                     <div class="selectBox" onclick="showCheckboxes('position_list')">
@@ -184,6 +145,7 @@
                         </select>
                         <div class="overSelect"></div>
                     </div>
+                    <%--todo generete checkboxes--%>
                     <div class="checkboxes" id="position_list">
                         <label for="Moscow">
                             <input type="checkbox" class="city_checkbox" id="Moscow" value="Moscow"/>Moscow</label>
@@ -219,7 +181,11 @@
     </c:forEach>
 </table>
 
-
+<div class="pages_div">
+    <c:forEach var="i" begin="1" end="${pages}">
+        <a class="pages" href='index.jsp?page=<c:out value="${i}"/>&sorting=<c:out value="${sorting}"/>'><c:out value="${i}"/></a>
+    </c:forEach>
+</div>
 <a href="cookie_employee_servlet">Cookie</a><br><br>
 <a href="send_file_servlet">Upload file</a><br>
 <a href="show_files_for_download_servlet">Download file</a><br><br>
@@ -233,6 +199,7 @@
             el.style.display = "none";
         })
     }
+
 </script>
 <script type="text/javascript" src="script/script.js">
 </script>

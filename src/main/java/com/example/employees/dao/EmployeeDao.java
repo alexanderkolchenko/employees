@@ -15,6 +15,8 @@ public class EmployeeDao {
     private static final String INSERT_EMPLOYEE = "INSERT INTO employee (e_name, e_surname, e_position, e_email, e_city) VALUES(?,?,?,?,?)";
     private static final String UPDATE_EMPLOYEE = "UPDATE employee SET e_name = ?, e_surname = ?, e_position = ?, e_email = ?, e_city = ? WHERE e_id =";
     private static final String GET_EMPLOYEES = "SELECT * FROM employee ORDER BY e_id";
+    private static final String GET_COUNT_ROWS = "SELECT count(*) FROM employee";
+    private static final String GET_EMPLOYEES_LIMIT_OFFSET = "SELECT * FROM employee ORDER BY ? DESC OFFSET ? LIMIT ? ;";
     private static final String GET_EMPLOYEE_BY_ID = "SELECT * FROM employee WHERE e_id =";
     private static final String DELETE_EMPLOYEE_BY_ID = "DELETE FROM employee WHERE e_id = ";
 
@@ -30,6 +32,7 @@ public class EmployeeDao {
         try (Connection connection = connectionDB.getConnection()) {
             employees = new ArrayList<>();
             PreparedStatement statement = connection.prepareStatement(GET_EMPLOYEES);
+
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
@@ -41,11 +44,56 @@ public class EmployeeDao {
         return employees;
     }
 
+    public ArrayList<Employee> getEmployeesList(String column, String sortOrder, int offset, int limit) {
+
+        ArrayList<Employee> employees = null;
+
+        try (Connection connection = connectionDB.getConnection()) {
+            employees = new ArrayList<>();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee ORDER BY " + column + " " + sortOrder +
+                    " OFFSET ? LIMIT ?");
+
+            //statement.setString(1, column);
+            //statement.setString(2, sortOrder);
+            statement.setInt(1, offset);
+            statement.setInt(2, limit);
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
+                employees.add(e);
+            }
+        } catch (SQLException e) {
+            log.error("Error of connection while getting employee: {} ", e.getMessage());
+        }
+        return employees;
+    }
+
+
+    public int getCountRows() {
+
+        int count = 0;
+
+        try (Connection connection = connectionDB.getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement(GET_COUNT_ROWS);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            log.error("Error of connection while getting employee: {} ", e.getMessage());
+        }
+        return count;
+    }
+
+
     public void addEmployees(Employee employee) throws SQLException {
         try (Connection connection = connectionDB.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT_EMPLOYEE);
             setParametersInStatementFromEmployee(statement, employee);
             statement.execute();
+            //todo getGeneratedkey
             log.info("New employee created : name - {}, surname - {}, position - {}",
                     employee.getName(),
                     employee.getSurname(),
@@ -72,6 +120,7 @@ public class EmployeeDao {
 
     public void updateEmployees(Employee employee) throws SQLException {
 
+
         Employee e = getEmployeeByID(String.valueOf(employee.getId())).orElseThrow(NoSuchElementException::new);
 
         try (Connection connection = connectionDB.getConnection()) {
@@ -90,7 +139,6 @@ public class EmployeeDao {
         Employee e = getEmployeeByID(id).orElseThrow(NoSuchElementException::new);
 
         try (Connection connection = connectionDB.getConnection()) {
-
             PreparedStatement statement = connection.prepareStatement(DELETE_EMPLOYEE_BY_ID + e.getId());
             statement.execute();
             log.info("Employee deleted: name {}, surname - {}, position {}", e.getName(), e.getSurname(), e.getPosition());
@@ -132,4 +180,5 @@ public class EmployeeDao {
             sb.append("before - ").append(e1.getCity()).append(" after - ").append(e2.getCity()).append("; ");
         return sb.toString();
     }
+
 }

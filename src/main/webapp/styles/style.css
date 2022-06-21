@@ -1,0 +1,86 @@
+table, .users {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto;
+    margin-top: 30px;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+button {
+    width: 120px;
+}
+
+.edit_button {
+    border: none;
+}
+
+.default_sort_buttons,
+.ascending_sort_buttons,
+.descending_sort_buttons {
+    padding-left: 20%;
+    filter: invert(50%);
+    width: 14px;
+}
+
+.default_sort_buttons:hover,
+.ascending_sort_buttons:hover,
+.descending_sort_buttons:hover {
+    filter: invert(0%);
+}
+
+.hidden_element, .hidden_city, .hidden_position {
+    display: none;
+}
+
+.multiselect {
+    width: 130px;
+}
+
+.selectBox {
+    position: relative;
+}
+
+.selectBox select {
+    width: 130px;
+    /*font-weight: bold;*/
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.checkboxes {
+    display: none;
+    border: 1px #dadada solid;
+    font-weight: normal;
+    font-size: 14px;
+    position: absolute;
+    background-color: white;
+    width: 130px;
+
+}
+
+.checkboxes label {
+    display: block;
+}
+
+.disabled_link {
+    pointer-events: none;
+}
+
+.pages_div {
+    padding-top: 20px;
+    text-align: center;
+    margin: auto;
+    width:50%;
+}

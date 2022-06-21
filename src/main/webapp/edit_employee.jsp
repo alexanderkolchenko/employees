@@ -28,6 +28,8 @@
     </style>
 </head>
 <body>
+<jsp:useBean id="employee" scope="request" type="com.example.employees.model.Employee"/>
+
 <c:set var="employee" scope="request" value="${employee}"/>
 <div id="container">
     <form action="edit_employee_servlet/${employee.id}" method="post">

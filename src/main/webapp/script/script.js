@@ -13,14 +13,14 @@ function descending_sort(a, b) {
     return a > b ? -1 : 1
 }
 
+//todo neutral sort, 1 column
+
 //index - number of column, type_sort - ascending_sort or descending_sort
 function sort_rows(index, type_sort) {
-    return function () {
-        let rows = Array.from(table.rows).slice(1).sort((a, b) => {
-            return type_sort(a.cells[index].innerHTML, b.cells[index].innerHTML)
-        })
-        table.tBodies[0].append(...rows)
-    }
+    let rows = Array.from(table.rows).slice(1).sort((a, b) => {
+        return type_sort(a.cells[index].innerHTML, b.cells[index].innerHTML)
+    })
+    table.tBodies[0].append(...rows)
 }
 
 let default_sort_buttons = document.getElementsByClassName("default_sort_buttons");
@@ -40,33 +40,34 @@ function show_default_sort_icon(index) {
 
 //sorting and changing icons
 function sort_event(event, index, buttons, sort_type) {
-    return function () {
-        event.currentTarget.classList.add("hidden_element");
-        buttons[index].classList.remove("hidden_element")
-        sort_rows(index + 1, sort_type)()
 
-        //save number of column to return default icon
-        if (index !== number_of_columns) {
-            show_default_sort_icon(number_of_columns)
-            number_of_columns = index
-        }
+    event.currentTarget.classList.add("hidden_element");
+    buttons[index].classList.remove("hidden_element")
+    sort_rows(index + 1, sort_type)
+
+    //save number of column to return default icon
+    if (index !== number_of_columns) {
+        show_default_sort_icon(number_of_columns)
+        number_of_columns = index
     }
 }
 
 //init buttons
+/*
 for (let i = 0; i < default_sort_buttons.length; i++) {
     default_sort_buttons[i].addEventListener('click', (e) => {
-        sort_event(e, i, ascending_sort_buttons, ascending_sort)()
+        sort_event(e, i, ascending_sort_buttons, ascending_sort)
     });
     ascending_sort_buttons[i].addEventListener('click', (e) => {
-        sort_event(e, i, descending_sort_buttons, descending_sort)()
+        sort_event(e, i, descending_sort_buttons, descending_sort)
     })
 }
 for (let i = 0; i < descending_sort_buttons.length; i++) {
     descending_sort_buttons[i].addEventListener('click', (e) => {
-        sort_event(e, i, ascending_sort_buttons, ascending_sort)()
+        sort_event(e, i, ascending_sort_buttons, ascending_sort)
     })
 }
+*/
 
 /*
     select with checkbox option
@@ -133,7 +134,6 @@ init_checkboxes(position_checkboxes, 3, "form_position")
 
 //filter by typing
 
-
 let tr = table.getElementsByTagName("tr")
 let input_name = document.getElementById("employee_name")
 let input_surname = document.getElementById("employee_surname")
@@ -165,3 +165,21 @@ input_surname.onkeyup = function () {
 input_email.onkeyup = function () {
     filter_rows_by_typing(input_email, 4)
 }
+
+
+//disable link of current page
+let url = document.location.href;
+let u = new URL(url);
+let page = u.searchParams.get("page");
+if (page === null || page=== "") page = "1";
+let pages = document.getElementsByClassName("pages");
+for (let p of pages) {
+
+    if (p.innerHTML === page) {
+        p.style.textDecoration = "none";
+        p.classList.add("disabled_link")
+    }
+}
+
+
+//sorting by jdbc

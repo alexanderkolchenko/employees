@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ public class GetCookieServlet extends HttpServlet {
 
         Map<String, Cookie> map = new HashMap<>();
         Cookie[] cookies = request.getCookies();
+
         for (Cookie cookie : cookies) {
             map.put(cookie.getName(), cookie);
         }

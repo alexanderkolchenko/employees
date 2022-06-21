@@ -2,6 +2,7 @@ package com.example.employees.dao;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.postgresql.Driver;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,6 +18,8 @@ public class ConnectionDao implements ConnectionDB {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+
         config.setJdbcUrl("jdbc:postgresql://localhost:5432/ee_db?characterEncoding=UTF-8");
         config.setUsername("postgres");
         config.setPassword("postgres");

@@ -10,7 +10,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 public class EditEmployeeServlet extends HttpServlet {
@@ -23,11 +22,13 @@ public class EditEmployeeServlet extends HttpServlet {
     }
 
     @Override
+    public void init() throws ServletException {
+        System.out.println("edit servlet init");
+        super.init();
+    }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        ServletContext context = getServletContext();
-        context.createServlet(AddEmployeeServlet.class).test();
-
 
         String uri = request.getRequestURI();
         String id = uri.substring(uri.lastIndexOf("/") + 1);
@@ -43,6 +44,7 @@ public class EditEmployeeServlet extends HttpServlet {
         request.setAttribute("employee", employee);
         request.getRequestDispatcher("/edit_employee.jsp").forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

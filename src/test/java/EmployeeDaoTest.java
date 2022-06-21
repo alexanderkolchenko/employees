@@ -59,6 +59,8 @@ public class EmployeeDaoTest {
         employeeDao.deleteEmployeeByID("1");
         Assertions.assertEquals(Optional.empty(), employeeDao.getEmployeeByID("1"));
         Assertions.assertEquals(1, employeeDao.getEmployeesList().size());
+
+        //todo connection is valid, is closed
     }
 
     @Test
