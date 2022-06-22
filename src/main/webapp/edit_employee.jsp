@@ -1,3 +1,4 @@
+<%@ page import="com.example.employees.controller.config.ColumnsConfig" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -25,14 +26,23 @@
             width: 110px;
             margin-bottom: 10px;
         }
+
+
+        select {
+            width: 177px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
 <jsp:useBean id="employee" scope="request" type="com.example.employees.model.Employee"/>
-
 <c:set var="employee" scope="request" value="${employee}"/>
+<%
+    String[] cities = ColumnsConfig.getCities();
+    pageContext.setAttribute("cities", cities);
+%>
 <div id="container">
-    <form action="edit_employee_servlet/${employee.id}" method="post">
+    <form action="edit_employee_servlet/${employee.id}" method="post" id="form">
         <label for="fname">First name:</label><br>
         <input type="text" id="fname" name="name" value="<c:out value="${employee.name}" />" required><br>
 
@@ -46,11 +56,18 @@
         <input type="text" id="email" name="email" value="<c:out value="${employee.email}" />" required><br>
 
         <label for="city">City:</label><br>
-        <input type="text" id="city" name="city" value="<c:out value="${employee.city}" />" required><br>
-
+        <select id="city" form="form" name="city">
+            <c:forEach var="city" items="${cities}">
+                <option value="${city}" ${city==employee.city?'selected':''}>${city}</option>
+            </c:forEach>
+        </select>
+        <br>
+        <br>
         <button type="submit">Save Change</button>
         <br>
-        <a href="/employees_war_exploded/delete_employee_servlet/${employee.id}"><input id="delete" type="button" value="Delete" name="delete"></a>
+        <a href="/employees_war_exploded/delete_employee_servlet/${employee.id}"><input id="delete" type="button"
+                                                                                        value="Delete"
+                                                                                        name="delete"></a>
     </form>
     <a id="main_page" href="/employees_war_exploded">
         <button>Main Page</button>

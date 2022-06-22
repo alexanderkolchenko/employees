@@ -1,5 +1,13 @@
-/*
-*sort rows
+/**
+*
+*
+*
+*
+*sorting by javascript
+*
+*
+*
+*
 */
 
 let table = document.getElementById("table")
@@ -170,16 +178,49 @@ input_email.onkeyup = function () {
 //disable link of current page
 let url = document.location.href;
 let u = new URL(url);
-let page = u.searchParams.get("page");
-if (page === null || page=== "") page = "1";
+let current_page = u.searchParams.get("page");
+if (current_page === null || current_page === "") current_page = "1";
 let pages = document.getElementsByClassName("pages");
 for (let p of pages) {
-
-    if (p.innerHTML === page) {
+    if (p.innerHTML === current_page) {
         p.style.textDecoration = "none";
         p.classList.add("disabled_link")
     }
 }
+/**
+ *
+ *
+ *
+ *
+ *
+ * sorting by jdbc
+ *
+ *
+ *
+ *
+ *
+ */
 
+let arr_columns = ["name", "surname", "position", "email", "city"]
 
-//sorting by jdbc
+let current_sort = u.searchParams.get("sorting");
+let current_sort_column;
+if (current_sort === null || current_sort === "") {
+    current_sort_column = "id"
+    current_sort = "asc"
+} else {
+    current_sort_column = current_sort.split("_")[0]
+    current_sort = current_sort.split("_")[1]
+}
+for (let i = 0; i < arr_columns.length; i++) {
+    if (current_sort_column === arr_columns[i]) {
+        if (current_sort === "asc") {
+            default_sort_buttons[i].classList.add("hidden_element");
+            ascending_sort_buttons[i].classList.remove("hidden_element");
+        } else {
+            ascending_sort_buttons[i].classList.add("hidden_element");
+            default_sort_buttons[i].classList.add("hidden_element");
+            descending_sort_buttons[i].classList.remove("hidden_element");
+        }
+    }
+}

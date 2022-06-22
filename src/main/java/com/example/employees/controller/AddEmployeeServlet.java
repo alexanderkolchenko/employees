@@ -28,14 +28,16 @@ public class AddEmployeeServlet extends HttpServlet {
         try {
             employee = createEmployeeFromRequest(request);
         } catch (RuntimeException e) {
-            response.sendRedirect("/employees_war_exploded/error_page.jsp");
+            System.out.println("here");
+           // response.sendRedirect("/employees_war_exploded/error_page.jsp");
+            e.printStackTrace();
             return;
         }
 
         try {
             employeeDao.addEmployees(employee);
         } catch (SQLException e) {
-            response.sendRedirect("/employees_war_exploded/error_page.jsp");
+            //response.sendRedirect("/employees_war_exploded/error_page.jsp");
             log.error("Error of connection while creating employee: {} ", e.getMessage());
             return;
         }

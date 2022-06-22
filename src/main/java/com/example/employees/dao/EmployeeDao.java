@@ -53,8 +53,6 @@ public class EmployeeDao {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee ORDER BY " + column + " " + sortOrder +
                     " OFFSET ? LIMIT ?");
 
-            //statement.setString(1, column);
-            //statement.setString(2, sortOrder);
             statement.setInt(1, offset);
             statement.setInt(2, limit);
 

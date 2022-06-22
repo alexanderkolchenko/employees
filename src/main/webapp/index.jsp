@@ -1,9 +1,9 @@
 <%@ page import="com.example.employees.dao.EmployeeDao" %>
 <%@ page import="com.example.employees.model.Employee" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.employees.model.User" %>
-<%@ page import="java.util.Arrays" %>
 <%@ page import="com.example.employees.dao.ConnectionDao" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.example.employees.controller.config.ColumnsConfig" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -44,9 +44,16 @@
 
     if (request.getParameter("sorting") == null || request.getParameter("sorting").equals("")) {
         request.setAttribute("sorting", "id_asc");
-    } else  {
+    } else {
         request.setAttribute("sorting", request.getParameter("sorting"));
     }
+
+    String[] cities = ColumnsConfig.getCities();
+    pageContext.setAttribute("cities", cities);
+
+    String[] positions = ColumnsConfig.getPositions();
+    pageContext.setAttribute("positions", positions);
+
     pageContext.setAttribute("pages", pages);
     offset = currentPage * 5 - 5;
     String currentSort = request.getParameter("sorting");
@@ -59,9 +66,7 @@
     }
 
     ArrayList<Employee> employees = dao.getEmployeesList(column, order, offset, limit);
-
     pageContext.setAttribute("employees", employees);
-
     String role = (String) request.getSession().getAttribute("role");
     String login = (String) request.getSession().getAttribute("login");
     Cookie cookie = Arrays.stream(request.getCookies()).filter(e -> e.getName().equals("userTime")).findFirst().orElse(null);
@@ -69,7 +74,6 @@
     if (role == null || role.equals(User.ROLE.UNKNOWN.toString()) || cookie == null) {
         response.sendRedirect("/employees_war_exploded/login.jsp");
     }
-
     request.setAttribute("login", login);
 %>
 
@@ -83,22 +87,33 @@
     <tr>
         <th>#</th>
         <th>Имя
-            <img class="default_sort_buttons" src="icons/up_down.png">
-            <img class="ascending_sort_buttons hidden_element" src="icons/up.png">
-            <img class="descending_sort_buttons hidden_element" src="icons/down.png">
+            <a href="index.jsp?page=${param.page}&sorting=name_asc"><img class="default_sort_buttons"
+                                                                         src="icons/up_down.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=name_desc"><img class="ascending_sort_buttons hidden_element"
+                                                                          src="icons/up.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=id_asc"><img class="descending_sort_buttons hidden_element"
+                                                                       src="icons/down.png"></a>
             <br><br>
             <input type="text" id="employee_name" size="10">
         </th>
         <th>Фамилия
-            <img class="default_sort_buttons" src="icons/up_down.png">
-            <img class="ascending_sort_buttons hidden_element" src="icons/up.png">
-            <img class="descending_sort_buttons hidden_element" src="icons/down.png">
+            <a href="index.jsp?page=${param.page}&sorting=surname_asc"><img class="default_sort_buttons"
+                                                                            src="icons/up_down.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=surname_desc"><img
+                    class="ascending_sort_buttons hidden_element"
+                    src="icons/up.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=id_asc"><img class="descending_sort_buttons hidden_element"
+                                                                       src="icons/down.png"></a>
             <br><br>
             <input type="text" id="employee_surname" size="10"/></th>
         <th>Должность
-            <img class="default_sort_buttons" src="icons/up_down.png">
-            <img class="ascending_sort_buttons hidden_element" src="icons/up.png">
-            <img class="descending_sort_buttons hidden_element" src="icons/down.png">
+            <a href="index.jsp?page=${param.page}&sorting=position_asc"><img class="default_sort_buttons"
+                                                                             src="icons/up_down.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=position_desc"><img
+                    class="ascending_sort_buttons hidden_element"
+                    src="icons/up.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=id_asc"><img class="descending_sort_buttons hidden_element"
+                                                                       src="icons/down.png"></a>
             <br><br>
             <form id="form_position">
                 <div class="multiselect">
@@ -110,22 +125,20 @@
                         <div class="overSelect"></div>
                     </div>
                     <div class="checkboxes" id="city_list">
-                        <label for="Junior_Developer">
-                            <input type="checkbox" class="position_checkbox" id="Junior_Developer"
-                                   value="Junior Developer"/>Junior Developer</label>
-                        <label for="Manager">
-                            <input type="checkbox" class="position_checkbox" id="Manager"
-                                   value="Manager"/>Manager</label>
-                        <label for="Developer">
-                            <input type="checkbox" class="position_checkbox" id="Developer"
-                                   value="Developer"/>Developer</label>
+                        <c:forEach var="position" items="${positions}">
+                            <label for="${position}">
+                                <input type="checkbox" class="position_checkbox" id="${position}" value="${position}"/>${position}</label>
+                        </c:forEach>
                     </div>
                 </div>
             </form>
         <th>E-mail
-            <img class="default_sort_buttons" src="icons/up_down.png">
-            <img class="ascending_sort_buttons hidden_element" src="icons/up.png">
-            <img class="descending_sort_buttons hidden_element" src="icons/down.png">
+            <a href="index.jsp?page=${param.page}&sorting=email_asc"><img class="default_sort_buttons"
+                                                                          src="icons/up_down.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=email_desc"><img class="ascending_sort_buttons hidden_element"
+                                                                           src="icons/up.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=id_asc"><img class="descending_sort_buttons hidden_element"
+                                                                       src="icons/down.png"></a>
             <br><br>
             <input type="text" id="employee_email" size="10"/>
 
@@ -133,27 +146,24 @@
         <th>Город
             <a href="index.jsp?page=${param.page}&sorting=city_asc"><img class="default_sort_buttons"
                                                                          src="icons/up_down.png"></a>
-            <img class="ascending_sort_buttons hidden_element" src="icons/up.png">
-            <img class="descending_sort_buttons hidden_element" src="icons/down.png">
+            <a href="index.jsp?page=${param.page}&sorting=city_desc"><img class="ascending_sort_buttons hidden_element"
+                                                                          src="icons/up.png"></a>
+            <a href="index.jsp?page=${param.page}&sorting=id_asc"><img class="descending_sort_buttons hidden_element"
+                                                                       src="icons/down.png"></a>
             <br><br>
             <form id="form_city">
                 <div class="multiselect">
                     <div class="selectBox" onclick="showCheckboxes('position_list')">
                         <select>
-                            <%--todo insert selected value, insert enum city--%>
                             <option></option>
                         </select>
                         <div class="overSelect"></div>
                     </div>
-                    <%--todo generete checkboxes--%>
                     <div class="checkboxes" id="position_list">
-                        <label for="Moscow">
-                            <input type="checkbox" class="city_checkbox" id="Moscow" value="Moscow"/>Moscow</label>
-                        <label for="Samara">
-                            <input type="checkbox" class="city_checkbox" id="Samara" value="Samara"/>Samara</label>
-                        <label for="Volgograd">
-                            <input type="checkbox" class="city_checkbox" id="Volgograd"
-                                   value="Volgograd"/>Volgograd</label>
+                        <c:forEach var="city" items="${cities}">
+                            <label for="${city}">
+                                <input type="checkbox" class="city_checkbox" id="${city}" value="${city}"/>${city}</label>
+                        </c:forEach>
                     </div>
                 </div>
             </form>
@@ -183,7 +193,8 @@
 
 <div class="pages_div">
     <c:forEach var="i" begin="1" end="${pages}">
-        <a class="pages" href='index.jsp?page=<c:out value="${i}"/>&sorting=<c:out value="${sorting}"/>'><c:out value="${i}"/></a>
+        <a class="pages" href='index.jsp?page=<c:out value="${i}"/>&sorting=<c:out value="${sorting}"/>'><c:out
+                value="${i}"/></a>
     </c:forEach>
 </div>
 <a href="cookie_employee_servlet">Cookie</a><br><br>
