@@ -231,7 +231,7 @@ function sendInfo() {
     let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
     let url = "index.jsp?";
     for (let x of v.values()) {
-        url += "&val=" + x.value;
+        url += "&city=" + x.value;
     }
 
     if (window.XMLHttpRequest) {
@@ -272,10 +272,15 @@ function getInfo() {
 function filter_rows_by_jdbc() {
 
     let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName('tr')
-
+    console.log(table.tBodies[0].childElementCount - 1)
     function clear_table() {
-        for (let i = 1; i <= 5; i++) {
-            rows[1].remove()
+        //todo change 20
+        for (let i = 1; i <=20; i++) {
+            try {
+                rows[1].remove()
+            } catch (e) {
+                continue
+            }
         }
     }
 

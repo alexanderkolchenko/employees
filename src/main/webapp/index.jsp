@@ -67,8 +67,8 @@
     }
 
     ArrayList<Employee> employees;
-    if (request.getParameter("val") != null && !request.getParameter("val").equals("")) {
-        String[] param = request.getParameterValues("val");
+    if (request.getParameter("city") != null && !request.getParameter("city").equals("")) {
+        String[] param = request.getParameterValues("city");
         employees = dao.getEmployeesByFilter(param);
         pageContext.removeAttribute("employees");
         for (Employee employee : employees) {
