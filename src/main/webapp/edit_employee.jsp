@@ -40,6 +40,9 @@
 <%
     String[] cities = ColumnsConfig.getCities();
     pageContext.setAttribute("cities", cities);
+
+    String[] positions = ColumnsConfig.getPositions();
+    pageContext.setAttribute("positions", positions);
 %>
 <div id="container">
     <form action="edit_employee_servlet/${employee.id}" method="post" id="form">
@@ -50,8 +53,13 @@
         <input type="text" id="lname" name="surname" value="<c:out value="${employee.surname}" />" required><br>
 
         <label for="position">Position:</label><br>
-        <input type="text" id="position" name="position" value="<c:out value="${employee.position}" />" required><br>
-
+        <select id="position" form="form" name="position">
+            <c:forEach var="position" items="${positions}">
+                <option value="${position}" ${position==employee.position?'selected':''}>${position}</option>
+            </c:forEach>
+        </select>
+        <br>
+        <br>
         <label for="email">E-mail:</label><br>
         <input type="text" id="email" name="email" value="<c:out value="${employee.email}" />" required><br>
 

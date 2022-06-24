@@ -33,6 +33,7 @@
         pages = countRows / limit;
     }
 
+
     int currentPage;
 
     if (request.getParameter("page") == null || request.getParameter("page").equals("")) {
@@ -66,6 +67,14 @@
     }
 
     ArrayList<Employee> employees = dao.getEmployeesList(column, order, offset, limit);
+    if (request.getParameter("val") != null && !request.getParameter("val").equals("")) {
+        String[] param = request.getParameterValues("val");
+        employees = dao.getEmployeesByFilter(param);
+        for(Employee employee : employees) {
+            System.out.println(employee);
+        }
+    }
+
     pageContext.setAttribute("employees", employees);
     String role = (String) request.getSession().getAttribute("role");
     String login = (String) request.getSession().getAttribute("login");
@@ -127,7 +136,8 @@
                     <div class="checkboxes" id="city_list">
                         <c:forEach var="position" items="${positions}">
                             <label for="${position}">
-                                <input type="checkbox" class="position_checkbox" id="${position}" value="${position}"/>${position}</label>
+                                <input type="checkbox" class="position_checkbox" id="${position}"
+                                       value="${position}"/>${position}</label>
                         </c:forEach>
                     </div>
                 </div>
@@ -151,7 +161,7 @@
             <a href="index.jsp?page=${param.page}&sorting=id_asc"><img class="descending_sort_buttons hidden_element"
                                                                        src="icons/down.png"></a>
             <br><br>
-            <form id="form_city">
+            <form id="form_city" name="form_city">
                 <div class="multiselect">
                     <div class="selectBox" onclick="showCheckboxes('position_list')">
                         <select>
@@ -162,7 +172,8 @@
                     <div class="checkboxes" id="position_list">
                         <c:forEach var="city" items="${cities}">
                             <label for="${city}">
-                                <input type="checkbox" class="city_checkbox" id="${city}" value="${city}"/>${city}</label>
+                                <input type="checkbox" class="city_checkbox" id="${city}" value="${city}"/>${city}
+                            </label>
                         </c:forEach>
                     </div>
                 </div>
@@ -209,6 +220,45 @@
         Array.prototype.forEach.call(buttons, function (el) {
             el.style.display = "none";
         })
+    }
+
+    let request;
+
+    function sendInfo() {
+        let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
+        let url = "index.jsp?";
+        for (let x of v.values()) {
+            url += "&val=" + x.value;
+        }
+
+        if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            request = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        try {
+            request.onreadystatechange = getInfo;
+            request.open("GET", url, true);
+            request.send();
+        } catch (e) {
+            alert("Unable to connect to server");
+        }
+    }
+
+    let city_check = document.getElementsByClassName("city_checkbox")
+    for (let i = 0; i < city_check.length; i++) {
+        city_check[i].onchange = function () {
+            sendInfo();
+        }
+    }
+
+
+    function getInfo() {
+        if (request.readyState === 4) {
+            let val = request.responseText;
+            console.log(val);
+        }
     }
 
 </script>

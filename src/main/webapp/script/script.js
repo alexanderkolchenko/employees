@@ -112,7 +112,6 @@ function filter_rows_by_checkbox(column, checked, form) {
             rows[i].classList.add(hidden_class)
             for (let j = 0; j < checked.length; j++) {
                 if (rows[i].cells[column].innerHTML === checked[j].value) {
-                    console.log(checked[j].value);
                     rows[i].classList.remove(hidden_class)
                 }
             }
@@ -136,8 +135,10 @@ function init_checkboxes(checkboxes, column, form) {
     }
 }
 
+/*
 init_checkboxes(city_checkboxes, 5, "form_city");
-init_checkboxes(position_checkboxes, 3, "form_position")
+init_checkboxes(position_checkboxes, 3, "form_position")*/
+
 
 
 //filter by typing

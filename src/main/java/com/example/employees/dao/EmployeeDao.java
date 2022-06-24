@@ -67,6 +67,25 @@ public class EmployeeDao {
         return employees;
     }
 
+    public ArrayList<Employee> getEmployeesByFilter(String[] param) {
+        ArrayList<Employee> employees = null;
+
+        try (Connection connection = connectionDB.getConnection()) {
+            employees = new ArrayList<>();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE e_city IN (?)");
+            Array a = connection.createArrayOf("varchar", param);
+            statement.setString(1, param[0]);
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
+                employees.add(e);
+            }
+        } catch (SQLException e) {
+            log.error("Error of connection while getting employee: {} ", e.getMessage());
+        }
+        return employees;
+    }
 
     public int getCountRows() {
 
