@@ -2,14 +2,19 @@ table, .users {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 80%;
-    margin: auto;
-    margin-top: 30px;
+    margin: 30px auto auto;
 }
 
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+}
+
+
+footer {
+    position: absolute;
+    bottom: 10px;
 }
 
 button {
@@ -78,9 +83,9 @@ button {
     pointer-events: none;
 }
 
-.pages_div {
+#pages_div {
     padding-top: 20px;
     text-align: center;
     margin: auto;
-    width:50%;
+    width: 50%;
 }

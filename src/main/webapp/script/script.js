@@ -175,18 +175,6 @@ input_email.onkeyup = function () {
 }
 
 
-//disable link of current page
-let url = document.location.href;
-let u = new URL(url);
-let current_page = u.searchParams.get("page");
-if (current_page === null || current_page === "") current_page = "1";
-let pages = document.getElementsByClassName("pages");
-for (let p of pages) {
-    if (p.innerHTML === current_page) {
-        p.style.textDecoration = "none";
-        p.classList.add("disabled_link")
-    }
-}
 /**
  *
  *
@@ -201,8 +189,22 @@ for (let p of pages) {
  *
  */
 
-let arr_columns = ["name", "surname", "position", "email", "city"]
 
+//disable link of current page
+let url = document.location.href;
+let u = new URL(url);
+let current_page = u.searchParams.get("page");
+if (current_page === null || current_page === "") current_page = "1";
+let pages = document.getElementsByClassName("pages");
+for (let p of pages) {
+    if (p.innerHTML === current_page) {
+        p.style.textDecoration = "none";
+        p.classList.add("disabled_link")
+    }
+}
+
+
+let arr_columns = ["name", "surname", "position", "email", "city"]
 let current_sort = u.searchParams.get("sorting");
 let current_sort_column;
 if (current_sort === null || current_sort === "") {
@@ -226,6 +228,7 @@ for (let i = 0; i < arr_columns.length; i++) {
 }
 
 let request;
+let count_rows_from_request = 0;
 
 function sendInfo() {
     let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
@@ -247,39 +250,55 @@ function sendInfo() {
     } catch (e) {
         alert("Unable to connect to server");
     }
-}
 
+    function getInfo() {
+        if (request.readyState === 4) {
+            let result_set = request.responseText;
+            let c = result_set.indexOf("id=count_row")
+            count_rows_from_request = +result_set.substr(c + 12, 3)
 
-for (let i = 0; i < city_checkboxes.length; i++) {
-    city_checkboxes[i].onchange = function () {
-        filter_rows_by_jdbc()
-        sendInfo();
+            //todo change 300
+            let begin = result_set.indexOf("<tr>", 300)
+            let end = result_set.indexOf("</table>");
+            result_set = result_set.slice(begin, end)
+            table.tBodies[0].insertAdjacentHTML("beforeend", result_set);
+            redraw_links_of_pages()
+        }
     }
 }
 
+for (let i = 0; i < city_checkboxes.length; i++) {
+    city_checkboxes[i].addEventListener("change", e => {
+        filter_rows_by_jdbc()
+        sendInfo();
+    })
+}
 
-function getInfo() {
-    if (request.readyState === 4) {
-        let result_set = request.responseText;
-        //todo change 300
-        let begin = result_set.indexOf("<tr>", 300)
-        let end = result_set.indexOf("</table>");
-        result_set = result_set.slice(begin, end)
-        table.tBodies[0].insertAdjacentHTML("beforeend", result_set);
+function redraw_links_of_pages() {
+    let links = document.getElementsByClassName('pages')
+
+    for (let i = 0; i < links.length; i++) {
+        links[i].classList.remove("hidden_element")
+    }
+    if (count_rows_from_request !== 0) {
+        let pages = Math.ceil(count_rows_from_request / 5);
+        for (let i = pages; i < links.length; i++) {
+            links[i].classList.add("hidden_element")
+        }
     }
 }
 
 function filter_rows_by_jdbc() {
 
     let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName('tr')
-    console.log(table.tBodies[0].childElementCount - 1)
+
     function clear_table() {
         //todo change 20
-        for (let i = 1; i <=20; i++) {
+        for (let i = 1; i <= 20; i++) {
             try {
                 rows[1].remove()
             } catch (e) {
-                continue
+
             }
         }
     }

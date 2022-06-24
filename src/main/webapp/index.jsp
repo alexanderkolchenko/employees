@@ -24,16 +24,14 @@
 <%
 
     EmployeeDao dao = new EmployeeDao(new ConnectionDao());
-
     int countRows = dao.getCountRows();
+
 
     if (countRows % limit != 0) {
         pages = countRows / limit + 1;
     } else {
         pages = countRows / limit;
     }
-
-
     int currentPage;
 
     if (request.getParameter("page") == null || request.getParameter("page").equals("")) {
@@ -49,12 +47,6 @@
         request.setAttribute("sorting", request.getParameter("sorting"));
     }
 
-    String[] cities = ColumnsConfig.getCities();
-    pageContext.setAttribute("cities", cities);
-
-    String[] positions = ColumnsConfig.getPositions();
-    pageContext.setAttribute("positions", positions);
-
     pageContext.setAttribute("pages", pages);
     offset = currentPage * 5 - 5;
     String currentSort = request.getParameter("sorting");
@@ -66,17 +58,24 @@
         order = "ASC";
     }
 
+    String[] cities = ColumnsConfig.getCities();
+    pageContext.setAttribute("cities", cities);
+
+    String[] positions = ColumnsConfig.getPositions();
+    pageContext.setAttribute("positions", positions);
+
     ArrayList<Employee> employees;
     if (request.getParameter("city") != null && !request.getParameter("city").equals("")) {
         String[] param = request.getParameterValues("city");
-        employees = dao.getEmployeesByFilter(param);
-        pageContext.removeAttribute("employees");
-        for (Employee employee : employees) {
-            System.out.println(employee);
-        }
+
+        employees = dao.getEmployeesByFilter(param, offset, limit);
+        countRows = dao.getCountRowsByFilters(param, "city");
+        out.print("id=count_row" + countRows);
+
     } else {
         employees = dao.getEmployeesList(column, order, offset, limit);
     }
+
 
     pageContext.setAttribute("employees", employees);
     String role = (String) request.getSession().getAttribute("role");
@@ -205,17 +204,19 @@
     </c:forEach>
 </table>
 
-<div class="pages_div">
+<div id="pages_div">
     <c:forEach var="i" begin="1" end="${pages}">
         <a class="pages" href='index.jsp?page=<c:out value="${i}"/>&sorting=<c:out value="${sorting}"/>'><c:out
                 value="${i}"/></a>
     </c:forEach>
 </div>
-<a href="cookie_employee_servlet">Cookie</a><br><br>
-<a href="send_file_servlet">Upload file</a><br>
-<a href="show_files_for_download_servlet">Download file</a><br><br>
-<a href="logout_servlet">Log out</a><br>
 
+<footer>
+    <a href="cookie_employee_servlet">Cookie</a><br><br>
+    <a href="send_file_servlet">Upload file</a><br>
+    <a href="show_files_for_download_servlet">Download file</a><br><br>
+    <a href="logout_servlet">Log out</a><br>
+</footer>
 <script type="text/javascript">
     let admin = '<%= request.getSession().getAttribute("role")%>';
     if (admin !== 'ADMIN') {
@@ -224,6 +225,8 @@
             el.style.display = "none";
         })
     }
+
+
 </script>
 <script type="text/javascript" src="script/script.js">
 </script>

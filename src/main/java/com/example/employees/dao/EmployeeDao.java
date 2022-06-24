@@ -67,7 +67,7 @@ public class EmployeeDao {
         return employees;
     }
 
-    public ArrayList<Employee> getEmployeesByFilter(String[] param) {
+    public ArrayList<Employee> getEmployeesByFilter(String[] param, int offset, int limit) {
         ArrayList<Employee> employees = null;
 
         try (Connection connection = connectionDB.getConnection()) {
@@ -77,10 +77,16 @@ public class EmployeeDao {
                 st.append(", ?");
             }
             st.append(")");
+            st.append(" OFFSET ");
+            st.append(offset);
+            st.append(" LIMIT ");
+            st.append(limit);
+
             PreparedStatement statement = connection.prepareStatement(st.toString());
             for (int i = 0; i < param.length; i++) {
                 statement.setString(i + 1, param[i]);
             }
+
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
@@ -99,6 +105,36 @@ public class EmployeeDao {
         try (Connection connection = connectionDB.getConnection()) {
 
             PreparedStatement statement = connection.prepareStatement(GET_COUNT_ROWS);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            log.error("Error of connection while getting employee: {} ", e.getMessage());
+        }
+        return count;
+    }
+
+    public int getCountRowsByFilters(String[] param, String type) {
+
+        int count = 0;
+
+        try (Connection connection = connectionDB.getConnection()) {
+            StringBuilder st = new StringBuilder(GET_COUNT_ROWS);
+            st.append(" where ");
+            st.append("e_");
+            st.append(type);
+            st.append(" IN ( ?");
+            for (int i = 1; i < param.length; i++) {
+                st.append(", ?");
+            }
+            st.append(")");
+
+            PreparedStatement statement = connection.prepareStatement(String.valueOf(st));
+            for (int i = 0; i < param.length; i++) {
+                statement.setString(i + 1, param[i]);
+            }
+
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 count = rs.getInt(1);
