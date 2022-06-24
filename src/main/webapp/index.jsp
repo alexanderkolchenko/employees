@@ -66,13 +66,16 @@
         order = "ASC";
     }
 
-    ArrayList<Employee> employees = dao.getEmployeesList(column, order, offset, limit);
+    ArrayList<Employee> employees;
     if (request.getParameter("val") != null && !request.getParameter("val").equals("")) {
         String[] param = request.getParameterValues("val");
         employees = dao.getEmployeesByFilter(param);
-        for(Employee employee : employees) {
+        pageContext.removeAttribute("employees");
+        for (Employee employee : employees) {
             System.out.println(employee);
         }
+    } else {
+        employees = dao.getEmployeesList(column, order, offset, limit);
     }
 
     pageContext.setAttribute("employees", employees);
@@ -221,46 +224,6 @@
             el.style.display = "none";
         })
     }
-
-    let request;
-
-    function sendInfo() {
-        let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
-        let url = "index.jsp?";
-        for (let x of v.values()) {
-            url += "&val=" + x.value;
-        }
-
-        if (window.XMLHttpRequest) {
-            request = new XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            request = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-
-        try {
-            request.onreadystatechange = getInfo;
-            request.open("GET", url, true);
-            request.send();
-        } catch (e) {
-            alert("Unable to connect to server");
-        }
-    }
-
-    let city_check = document.getElementsByClassName("city_checkbox")
-    for (let i = 0; i < city_check.length; i++) {
-        city_check[i].onchange = function () {
-            sendInfo();
-        }
-    }
-
-
-    function getInfo() {
-        if (request.readyState === 4) {
-            let val = request.responseText;
-            console.log(val);
-        }
-    }
-
 </script>
 <script type="text/javascript" src="script/script.js">
 </script>

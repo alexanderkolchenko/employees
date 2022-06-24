@@ -1,14 +1,14 @@
 /**
-*
-*
-*
-*
-*sorting by javascript
-*
-*
-*
-*
-*/
+ *
+ *
+ *
+ *
+ *sorting, filter by javascript
+ *
+ *
+ *
+ *
+ */
 
 let table = document.getElementById("table")
 
@@ -140,7 +140,6 @@ init_checkboxes(city_checkboxes, 5, "form_city");
 init_checkboxes(position_checkboxes, 3, "form_position")*/
 
 
-
 //filter by typing
 
 let tr = table.getElementsByTagName("tr")
@@ -194,7 +193,7 @@ for (let p of pages) {
  *
  *
  *
- * sorting by jdbc
+ * sorting filter by jdbc
  *
  *
  *
@@ -225,3 +224,61 @@ for (let i = 0; i < arr_columns.length; i++) {
         }
     }
 }
+
+let request;
+
+function sendInfo() {
+    let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
+    let url = "index.jsp?";
+    for (let x of v.values()) {
+        url += "&val=" + x.value;
+    }
+
+    if (window.XMLHttpRequest) {
+        request = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        request = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+
+    try {
+        request.onreadystatechange = getInfo;
+        request.open("GET", url, true);
+        request.send();
+    } catch (e) {
+        alert("Unable to connect to server");
+    }
+}
+
+
+for (let i = 0; i < city_checkboxes.length; i++) {
+    city_checkboxes[i].onchange = function () {
+        filter_rows_by_jdbc()
+        sendInfo();
+    }
+}
+
+
+function getInfo() {
+    if (request.readyState === 4) {
+        let result_set = request.responseText;
+        //todo change 300
+        let begin = result_set.indexOf("<tr>", 300)
+        let end = result_set.indexOf("</table>");
+        result_set = result_set.slice(begin, end)
+        table.tBodies[0].insertAdjacentHTML("beforeend", result_set);
+    }
+}
+
+function filter_rows_by_jdbc() {
+
+    let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName('tr')
+
+    function clear_table() {
+        for (let i = 1; i <= 5; i++) {
+            rows[1].remove()
+        }
+    }
+
+    clear_table()
+}
+

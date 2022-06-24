@@ -9,3 +9,4 @@ CREATE TABLE employee
     e_city VARCHAR(50) NULL
 );
 
+select  * from employee;

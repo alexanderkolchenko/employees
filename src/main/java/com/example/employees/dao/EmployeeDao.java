@@ -72,10 +72,15 @@ public class EmployeeDao {
 
         try (Connection connection = connectionDB.getConnection()) {
             employees = new ArrayList<>();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE e_city IN (?)");
-            Array a = connection.createArrayOf("varchar", param);
-            statement.setString(1, param[0]);
-
+            StringBuilder st = new StringBuilder("SELECT * FROM employee WHERE e_city IN (?");
+            for (int i = 1; i < param.length; i++) {
+                st.append(", ?");
+            }
+            st.append(")");
+            PreparedStatement statement = connection.prepareStatement(st.toString());
+            for (int i = 0; i < param.length; i++) {
+                statement.setString(i + 1, param[i]);
+            }
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
