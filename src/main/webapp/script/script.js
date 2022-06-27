@@ -193,15 +193,18 @@ input_email.onkeyup = function () {
 //disable link of current page
 let url = document.location.href;
 let u = new URL(url);
+let pages = document.getElementsByClassName("pages");
+/*
 let current_page = u.searchParams.get("page");
 if (current_page === null || current_page === "") current_page = "1";
-let pages = document.getElementsByClassName("pages");
+
 for (let p of pages) {
     if (p.innerHTML === current_page) {
         p.style.textDecoration = "none";
         p.classList.add("disabled_link")
     }
 }
+*/
 
 
 let arr_columns = ["name", "surname", "position", "email", "city"]
@@ -230,13 +233,13 @@ for (let i = 0; i < arr_columns.length; i++) {
 let request;
 let count_rows_from_request = 0;
 
-function sendInfo() {
-    let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
-    let url = "index.jsp?";
-    // let url = new URL(location.href) + "?"
-    for (let x of v.values()) {
-        url += "&city=" + x.value;
-    }
+function sendInfo(url) {
+    /* let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
+     let url = "index.jsp?";
+     // let url = new URL(location.href) + "?"
+     for (let x of v.values()) {
+         url += "&city=" + x.value;
+     }*/
 
     if (window.XMLHttpRequest) {
         request = new XMLHttpRequest();
@@ -269,45 +272,72 @@ function sendInfo() {
     }
 }
 
+//
+//let request_url = "index.jsp?";
+let current_page = "?page=1&sorting=id_asc"
+let request_url = location.href + current_page
 //init checkbox
 for (let i = 0; i < city_checkboxes.length; i++) {
     city_checkboxes[i].addEventListener("change", e => {
+        let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
+        let href = new URL(request_url);
+        let param = new URLSearchParams(href.search).getAll("city");
+
+        if (param.length === 0) {
+            for (let x of v.values()) {
+                href.searchParams.append('city', x.value);
+            }
+        } else {
+            href.searchParams.delete("city")
+            for (let x of v.values()) {
+                href.searchParams.append('city', x.value);
+            }
+        }
+        request_url = href;
         filter_rows_by_jdbc()
-
-        sendInfo();
-
-        add_param_to_link_of_pages(city_checkboxes[i].value)
+        sendInfo(href);
+        //add_param_to_link_of_pages(city_checkboxes[i].value)
     })
 }
-let links = document.getElementsByClassName('pages')
+
 
 //init page links
+for (let i = 0; i < pages.length; i++) {
+    pages[0].style.textDecoration = "none"
+    pages[i].addEventListener("click", e => {
+        e.preventDefault()
 
-for (let l of links) {
+        let url = new URL(request_url)
+        url.searchParams.set("page", (i + 1).toString())
+        request_url = url
+        for (let t of pages) {
+            t.classList.remove("disabled_link")
+            t.style.textDecoration = "underline"
+        }
+        e.currentTarget.style.textDecoration = "none"
+        e.currentTarget.classList.add("disabled_link")
 
-    l.addEventListener("mouseover", e => {
-        console.log('click')
-       // filter_rows_by_jdbc()
-       // sendInfo();
+        filter_rows_by_jdbc()
+        sendInfo(url);
     })
 }
 
 
 function add_param_to_link_of_pages(...params) {
-    for (let l of links) {
-       l.href += "&city=" + params[0]
+    for (let l of pages) {
+        l.href += "&city=" + params[0]
     }
 }
 
 
 function redraw_links_of_pages() {
-    for (let i = 0; i < links.length; i++) {
-        links[i].classList.remove("hidden_element")
+    for (let i = 0; i < pages.length; i++) {
+        pages[i].classList.remove("hidden_element")
     }
     if (count_rows_from_request !== 0) {
-        let pages = Math.ceil(count_rows_from_request / 5);
-        for (let i = pages; i < links.length; i++) {
-            links[i].classList.add("hidden_element")
+        let p = Math.ceil(count_rows_from_request / 5);
+        for (let i = p; i < pages.length; i++) {
+            pages[i].classList.add("hidden_element")
         }
     }
 }
@@ -326,5 +356,6 @@ function filter_rows_by_jdbc() {
             }
         }
     }
+
     clear_table()
 }

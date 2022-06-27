@@ -208,6 +208,8 @@
     <c:forEach var="i" begin="1" end="${pages}">
         <a class="pages" href='index.jsp?page=<c:out value="${i}"/>&sorting=<c:out value="${sorting}"/>'><c:out
                 value="${i}"/></a>
+      <%--  <a class="pages" href=''><c:out
+                value="${i}"/></a>--%>
     </c:forEach>
 </div>
 
