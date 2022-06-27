@@ -14,6 +14,7 @@
 </head>
 <body>
 <%!
+    String[] columns = new String[]{"name", "surname", "position", "email", "city"};
     String column;
     String order;
     int limit = 5;
@@ -65,17 +66,26 @@
     pageContext.setAttribute("positions", positions);
 
     ArrayList<Employee> employees;
-    if (request.getParameter("city") != null && !request.getParameter("city").equals("")) {
-        String[] param = request.getParameterValues("city");
-
-        employees = dao.getEmployeesByFilter(param, offset, limit);
-        countRows = dao.getCountRowsByFilters(param, "city");
-        out.print("id=count_row" + countRows);
+    if (request.getParameter("city") != null && !request.getParameter("city").equals("")
+            || request.getParameter("position") != null && !request.getParameter("position").equals("")
+            || request.getParameter("email") != null && !request.getParameter("email").equals("")
+            || request.getParameter("name") != null && !request.getParameter("name").equals("")
+            || request.getParameter("surname") != null && !request.getParameter("surname").equals("")) {
+        Map<String, String[]> params = new HashMap<>();
+        for (String s : columns) {
+            String[] p = request.getParameterValues(s);
+            if (p != null) {
+                params.put("e_" + s, request.getParameterValues(s));
+            }
+        }
+        //String[] param = request.getParameterValues("city");
+        employees = dao.getEmployeesByFilter1(params, offset, limit);
+        /*countRows = dao.getCountRowsByFilters(param, "city");
+        out.print("id=count_row" + countRows);*/
 
     } else {
         employees = dao.getEmployeesList(column, order, offset, limit);
     }
-
 
     pageContext.setAttribute("employees", employees);
     String role = (String) request.getSession().getAttribute("role");
@@ -208,8 +218,8 @@
     <c:forEach var="i" begin="1" end="${pages}">
         <a class="pages" href='index.jsp?page=<c:out value="${i}"/>&sorting=<c:out value="${sorting}"/>'><c:out
                 value="${i}"/></a>
-      <%--  <a class="pages" href=''><c:out
-                value="${i}"/></a>--%>
+        <%--  <a class="pages" href=''><c:out
+                  value="${i}"/></a>--%>
     </c:forEach>
 </div>
 

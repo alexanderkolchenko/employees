@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class EmployeeDao {
     private final static Logger log = LoggerFactory.getLogger(EmployeeDao.class);
@@ -71,7 +73,6 @@ public class EmployeeDao {
     public ArrayList<Employee> getEmployeesByFilter(String[] param, int offset, int limit) {
         ArrayList<Employee> employees = null;
 
-
         try (Connection connection = connectionDB.getConnection()) {
             employees = new ArrayList<>();
             StringBuilder st = new StringBuilder("SELECT * FROM employee WHERE e_city IN (?");
@@ -87,6 +88,58 @@ public class EmployeeDao {
             PreparedStatement statement = connection.prepareStatement(st.toString());
             for (int i = 0; i < param.length; i++) {
                 statement.setString(i + 1, param[i]);
+            }
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
+                employees.add(e);
+            }
+        } catch (SQLException e) {
+            log.error("Error of connection while getting employee: {} ", e.getMessage());
+        }
+        return employees;
+    }
+
+    public ArrayList<Employee> getEmployeesByFilter1(Map<String, String[]> params, int offset, int limit) {
+        ArrayList<Employee> employees = null;
+
+        try (Connection connection = connectionDB.getConnection()) {
+            employees = new ArrayList<>();
+            StringBuilder st = new StringBuilder("SELECT * FROM employee WHERE");
+
+            ArrayList<String> flatParams = new ArrayList<>();
+            System.out.println("here");
+            for (Map.Entry<String, String[]> entry : params.entrySet()) {
+
+                st.append(" ");
+                st.append(entry.getKey());
+                st.append(" IN");
+                st.append(" (");
+                for (String s : entry.getValue()) {
+                    st.append(" ?,");
+                    flatParams.add(s);
+                }
+                st.append(")");
+                st.replace(st.lastIndexOf(",)"), st.lastIndexOf(")"), "");
+                if (params.size() > 1) {
+                    st.append(" AND");
+                }
+            }
+
+            st.append(" OFFSET ");
+            st.append(offset);
+            System.out.println(st);
+            if (st.lastIndexOf("AND OFFSET") != -1) {
+                st.replace(st.lastIndexOf("AND OFFSET"), st.lastIndexOf("OFFSET"), "");
+            }
+
+            st.append(" LIMIT ");
+            st.append(limit);
+            PreparedStatement statement = connection.prepareStatement(st.toString());
+
+            for (int i = 0; i < flatParams.size(); i++) {
+                statement.setString(i + 1, flatParams.get(i));
             }
 
             ResultSet rs = statement.executeQuery();

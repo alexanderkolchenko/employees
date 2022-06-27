@@ -126,7 +126,7 @@ function filter_rows_by_checkbox(column, checked, form) {
 let city_checkboxes = document.getElementsByClassName("city_checkbox")
 let position_checkboxes = document.getElementsByClassName("position_checkbox")
 
-function init_checkboxes(checkboxes, column, form) {
+function init_checkboxes_js(checkboxes, column, form) {
     for (let i = 0; i < checkboxes.length; i++) {
         checkboxes[i].onchange = function () {
             let checked = document.getElementById(form).querySelectorAll("input[type=checkbox]:checked");
@@ -136,8 +136,8 @@ function init_checkboxes(checkboxes, column, form) {
 }
 
 /*
-init_checkboxes(city_checkboxes, 5, "form_city");
-init_checkboxes(position_checkboxes, 3, "form_position")*/
+init_checkboxes_js(city_checkboxes, 5, "form_city");
+init_checkboxes_js(position_checkboxes, 3, "form_position")*/
 
 
 //filter by typing
@@ -181,7 +181,7 @@ input_email.onkeyup = function () {
  *
  *
  *
- * sorting filter by jdbc
+ * sorting, filter by jdbc
  *
  *
  *
@@ -273,11 +273,13 @@ function sendInfo(url) {
 }
 
 //
+
 //let request_url = "index.jsp?";
 let current_page = "?page=1&sorting=id_asc"
 let request_url = location.href + current_page
+
 //init checkbox
-for (let i = 0; i < city_checkboxes.length; i++) {
+/*for (let i = 0; i < city_checkboxes.length; i++) {
     city_checkboxes[i].addEventListener("change", e => {
         let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
         let href = new URL(request_url);
@@ -296,10 +298,34 @@ for (let i = 0; i < city_checkboxes.length; i++) {
         request_url = href;
         filter_rows_by_jdbc()
         sendInfo(href);
-        //add_param_to_link_of_pages(city_checkboxes[i].value)
     })
+}*/
+function init_checkboxes(checkboxes, form) {
+    for (let i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener("change", e => {
+            let v = document.getElementById("form_" + form).querySelectorAll("input[type=checkbox]:checked");
+            let href = new URL(request_url);
+            let param = new URLSearchParams(href.search).getAll(form);
+
+            if (param.length === 0) {
+                for (let x of v.values()) {
+                    href.searchParams.append(form, x.value);
+                }
+            } else {
+                href.searchParams.delete(form)
+                for (let x of v.values()) {
+                    href.searchParams.append(form, x.value);
+                }
+            }
+            request_url = href;
+            filter_rows_by_jdbc()
+            sendInfo(href);
+        })
+    }
 }
 
+init_checkboxes(city_checkboxes, "city")
+init_checkboxes(position_checkboxes, "position")
 
 //init page links
 for (let i = 0; i < pages.length; i++) {
@@ -322,14 +348,6 @@ for (let i = 0; i < pages.length; i++) {
     })
 }
 
-
-function add_param_to_link_of_pages(...params) {
-    for (let l of pages) {
-        l.href += "&city=" + params[0]
-    }
-}
-
-
 function redraw_links_of_pages() {
     for (let i = 0; i < pages.length; i++) {
         pages[i].classList.remove("hidden_element")
@@ -342,6 +360,8 @@ function redraw_links_of_pages() {
     }
 }
 
+
+//todo rename clear
 function filter_rows_by_jdbc() {
 
     let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName('tr')
@@ -351,9 +371,7 @@ function filter_rows_by_jdbc() {
         for (let i = 1; i <= 20; i++) {
             try {
                 rows[1].remove()
-            } catch (e) {
-
-            }
+            } catch (e) {}
         }
     }
 
