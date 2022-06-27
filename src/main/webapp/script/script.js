@@ -261,6 +261,7 @@ function sendInfo(url) {
             let c = result_set.indexOf("id=count_row")
 
             count_rows_from_request = +result_set.substr(c + 12, 3)
+            console.log(count_rows_from_request)
             //todo change 300
             //redraw table
             let begin = result_set.indexOf("<tr>", 300)

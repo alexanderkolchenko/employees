@@ -78,10 +78,10 @@
                 params.put("e_" + s, request.getParameterValues(s));
             }
         }
-        //String[] param = request.getParameterValues("city");
-        employees = dao.getEmployeesByFilter1(params, offset, limit);
-        /*countRows = dao.getCountRowsByFilters(param, "city");
-        out.print("id=count_row" + countRows);*/
+        employees = dao.getEmployeesByFilter(params, offset, limit);
+        countRows = dao.getCountRowsByFilters(params);
+        out.print("id=count_row" + countRows);
+
 
     } else {
         employees = dao.getEmployeesList(column, order, offset, limit);

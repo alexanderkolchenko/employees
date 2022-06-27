@@ -69,39 +69,7 @@ public class EmployeeDao {
         return employees;
     }
 
-
-    public ArrayList<Employee> getEmployeesByFilter(String[] param, int offset, int limit) {
-        ArrayList<Employee> employees = null;
-
-        try (Connection connection = connectionDB.getConnection()) {
-            employees = new ArrayList<>();
-            StringBuilder st = new StringBuilder("SELECT * FROM employee WHERE e_city IN (?");
-            for (int i = 1; i < param.length; i++) {
-                st.append(", ?");
-            }
-            st.append(")");
-            st.append(" OFFSET ");
-            st.append(offset);
-            st.append(" LIMIT ");
-            st.append(limit);
-
-            PreparedStatement statement = connection.prepareStatement(st.toString());
-            for (int i = 0; i < param.length; i++) {
-                statement.setString(i + 1, param[i]);
-            }
-
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                Employee e = setParametersInEmployeeFromStatement(new Employee(), rs);
-                employees.add(e);
-            }
-        } catch (SQLException e) {
-            log.error("Error of connection while getting employee: {} ", e.getMessage());
-        }
-        return employees;
-    }
-
-    public ArrayList<Employee> getEmployeesByFilter1(Map<String, String[]> params, int offset, int limit) {
+    public ArrayList<Employee> getEmployeesByFilter(Map<String, String[]> params, int offset, int limit) {
         ArrayList<Employee> employees = null;
 
         try (Connection connection = connectionDB.getConnection()) {
@@ -109,7 +77,6 @@ public class EmployeeDao {
             StringBuilder st = new StringBuilder("SELECT * FROM employee WHERE");
 
             ArrayList<String> flatParams = new ArrayList<>();
-            System.out.println("here");
             for (Map.Entry<String, String[]> entry : params.entrySet()) {
 
                 st.append(" ");
@@ -170,25 +137,39 @@ public class EmployeeDao {
         return count;
     }
 
-    public int getCountRowsByFilters(String[] param, String type) {
+    public int getCountRowsByFilters(Map<String, String[]> params) {
 
         int count = 0;
 
         try (Connection connection = connectionDB.getConnection()) {
-            StringBuilder st = new StringBuilder(GET_COUNT_ROWS);
-            st.append(" where ");
-            st.append("e_");
-            st.append(type);
-            st.append(" IN ( ?");
-            for (int i = 1; i < param.length; i++) {
-                st.append(", ?");
-            }
-            st.append(")");
+            StringBuilder st = new StringBuilder(GET_COUNT_ROWS + " WHERE");
+            ArrayList<String> flatParams = new ArrayList<>();
+            for (Map.Entry<String, String[]> entry : params.entrySet()) {
 
-            PreparedStatement statement = connection.prepareStatement(String.valueOf(st));
-            for (int i = 0; i < param.length; i++) {
-                statement.setString(i + 1, param[i]);
+                st.append(" ");
+                st.append(entry.getKey());
+                st.append(" IN");
+                st.append(" (");
+                for (String s : entry.getValue()) {
+                    st.append(" ?,");
+                    flatParams.add(s);
+                }
+                st.append(")");
+                st.replace(st.lastIndexOf(",)"), st.lastIndexOf(")"), "");
+                if (params.size() > 1) {
+                    st.append(" AND");
+                }
             }
+            if (st.lastIndexOf("AND ") != -1) {
+                st.replace(st.lastIndexOf(") AND"), st.lastIndexOf("AND") + 3, ")");
+            }
+
+            PreparedStatement statement = connection.prepareStatement(st.toString());
+            for (int i = 0; i < flatParams.size(); i++) {
+                statement.setString(i + 1, flatParams.get(i));
+            }
+
+            System.out.println(statement.toString());
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
