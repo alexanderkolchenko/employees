@@ -67,8 +67,10 @@ public class EmployeeDao {
         return employees;
     }
 
+
     public ArrayList<Employee> getEmployeesByFilter(String[] param, int offset, int limit) {
         ArrayList<Employee> employees = null;
+
 
         try (Connection connection = connectionDB.getConnection()) {
             employees = new ArrayList<>();

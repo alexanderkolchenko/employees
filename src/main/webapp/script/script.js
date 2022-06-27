@@ -233,6 +233,7 @@ let count_rows_from_request = 0;
 function sendInfo() {
     let v = document.form_city.querySelectorAll("input[type=checkbox]:checked");
     let url = "index.jsp?";
+    // let url = new URL(location.href) + "?"
     for (let x of v.values()) {
         url += "&city=" + x.value;
     }
@@ -255,9 +256,10 @@ function sendInfo() {
         if (request.readyState === 4) {
             let result_set = request.responseText;
             let c = result_set.indexOf("id=count_row")
-            count_rows_from_request = +result_set.substr(c + 12, 3)
 
+            count_rows_from_request = +result_set.substr(c + 12, 3)
             //todo change 300
+            //redraw table
             let begin = result_set.indexOf("<tr>", 300)
             let end = result_set.indexOf("</table>");
             result_set = result_set.slice(begin, end)
@@ -267,16 +269,38 @@ function sendInfo() {
     }
 }
 
+//init checkbox
 for (let i = 0; i < city_checkboxes.length; i++) {
     city_checkboxes[i].addEventListener("change", e => {
         filter_rows_by_jdbc()
+
         sendInfo();
+
+        add_param_to_link_of_pages(city_checkboxes[i].value)
+    })
+}
+let links = document.getElementsByClassName('pages')
+
+//init page links
+
+for (let l of links) {
+
+    l.addEventListener("mouseover", e => {
+        console.log('click')
+       // filter_rows_by_jdbc()
+       // sendInfo();
     })
 }
 
-function redraw_links_of_pages() {
-    let links = document.getElementsByClassName('pages')
 
+function add_param_to_link_of_pages(...params) {
+    for (let l of links) {
+       l.href += "&city=" + params[0]
+    }
+}
+
+
+function redraw_links_of_pages() {
     for (let i = 0; i < links.length; i++) {
         links[i].classList.remove("hidden_element")
     }
@@ -302,7 +326,5 @@ function filter_rows_by_jdbc() {
             }
         }
     }
-
     clear_table()
 }
-
