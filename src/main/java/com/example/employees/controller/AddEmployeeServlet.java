@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class AddEmployeeServlet extends HttpServlet {
 
@@ -29,7 +31,7 @@ public class AddEmployeeServlet extends HttpServlet {
             employee = createEmployeeFromRequest(request);
         } catch (RuntimeException e) {
             System.out.println("here");
-           // response.sendRedirect("/employees_war_exploded/error_page.jsp");
+            // response.sendRedirect("/employees_war_exploded/error_page.jsp");
             e.printStackTrace();
             return;
         }
@@ -37,6 +39,7 @@ public class AddEmployeeServlet extends HttpServlet {
         try {
             employeeDao.addEmployees(employee);
         } catch (SQLException e) {
+            e.printStackTrace();
             //response.sendRedirect("/employees_war_exploded/error_page.jsp");
             log.error("Error of connection while creating employee: {} ", e.getMessage());
             return;
@@ -54,6 +57,8 @@ public class AddEmployeeServlet extends HttpServlet {
         String position = request.getParameter("position");
         String email = request.getParameter("email");
         String city = request.getParameter("city");
+        BigDecimal salary = new BigDecimal(request.getParameter("salary"));
+        LocalDate hireDate = LocalDate.parse(request.getParameter("hire_date"));
 
         Employee employee = new Employee();
 
@@ -62,7 +67,9 @@ public class AddEmployeeServlet extends HttpServlet {
         employee.setPosition(position);
         employee.setEmail(email);
         employee.setCity(city);
-
+        employee.setHireDate(hireDate);
+        employee.setSalary(salary);
+        System.out.println(employee);
         return employee;
     }
 
@@ -72,7 +79,8 @@ public class AddEmployeeServlet extends HttpServlet {
         String position = request.getParameter("position");
         String email = request.getParameter("email");
         String city = request.getParameter("city");
-        if (name.equals("") || surname.equals("") || position.equals("") || email.equals("") || city.equals("")) {
+        if (name.equals("") || surname.equals("") || position.equals("") || email.equals("") || city.equals("")
+        ) {
             throw new IllegalArgumentException();
         }
     }

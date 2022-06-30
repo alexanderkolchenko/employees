@@ -12,11 +12,10 @@ import java.util.*;
 public class EmployeeDao {
     private final static Logger log = LoggerFactory.getLogger(EmployeeDao.class);
     private ConnectionDB connectionDB;
-    private static final String INSERT_EMPLOYEE = "INSERT INTO employee (e_name, e_surname, e_position, e_email, e_city) VALUES(?,?,?,?,?)";
-    private static final String UPDATE_EMPLOYEE = "UPDATE employee SET e_name = ?, e_surname = ?, e_position = ?, e_email = ?, e_city = ? WHERE e_id =";
+    private static final String INSERT_EMPLOYEE = "INSERT INTO employee (e_name, e_surname, e_position, e_email, e_city, e_salary, e_hire_date) VALUES(?,?,?,?,?,?,?)";
+    private static final String UPDATE_EMPLOYEE = "UPDATE employee SET e_name = ?, e_surname = ?, e_position = ?, e_email = ?, e_city = ?, e_salary = ?, e_hire_date = ? WHERE e_id =";
     private static final String GET_EMPLOYEES = "SELECT * FROM employee ORDER BY e_id";
     private static final String GET_COUNT_ROWS = "SELECT count(*) FROM employee";
-
     private static final String GET_EMPLOYEE_BY_ID = "SELECT * FROM employee WHERE e_id =";
     private static final String DELETE_EMPLOYEE_BY_ID = "DELETE FROM employee WHERE e_id = ";
 
@@ -346,6 +345,7 @@ public class EmployeeDao {
         s.setString(5, e.getCity());
         s.setBigDecimal(6, e.getSalary());
         s.setDate(7, Date.valueOf(e.getHireDate()));
+
     }
 
     //возращает строку состоящую из полей, который поменялись при редактировании работника
@@ -361,8 +361,11 @@ public class EmployeeDao {
             sb.append("before - ").append(e1.getEmail()).append(" after - ").append(e2.getEmail()).append("; ");
         if (!e1.getCity().equals(e2.getCity()))
             sb.append("before - ").append(e1.getCity()).append(" after - ").append(e2.getCity()).append("; ");
+        if (!e1.getSalary().equals(e2.getSalary()))
+            sb.append("before - ").append(e1.getSalary()).append(" after - ").append(e2.getSalary()).append("; ");
+        if (!e1.getHireDate().equals(e2.getHireDate()))
+            sb.append("before - ").append(e1.getHireDate()).append(" after - ").append(e2.getHireDate()).append("; ");
 
-        //todo date and salary
         return sb.toString();
     }
 }

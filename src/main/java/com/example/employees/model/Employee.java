@@ -83,11 +83,14 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", position='" + position + '\'' +
                 ", email='" + email + '\'' +
                 ", city='" + city + '\'' +
+                ", salary=" + salary +
+                ", hireDate=" + hireDate +
                 '}';
     }
 
@@ -96,7 +99,7 @@ public class Employee {
         if (this == o) return true;
         if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
-        return id == employee.id && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(position, employee.position) && Objects.equals(email, employee.email) && Objects.equals(city, employee.city);
+        return id == employee.id && Objects.equals(name, employee.name) && Objects.equals(surname, employee.surname) && Objects.equals(position, employee.position) && Objects.equals(email, employee.email) && Objects.equals(city, employee.city) && Objects.equals(salary, employee.salary) && Objects.equals(hireDate, employee.hireDate);
     }
 
     @Override

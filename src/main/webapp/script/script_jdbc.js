@@ -80,6 +80,7 @@ function sendInfo(url) {
             let c = result_set.indexOf("id=count_row")
 
             count_rows_from_request = +result_set.substr(c + 12, 3)
+            console.log(count_rows_from_request)
             //todo change 300
             //redraw table
             let begin = result_set.indexOf("<tr>", 300)
@@ -183,9 +184,9 @@ function init_input_fields(field, label) {
         clearTimeout(timer)
         timer = setTimeout(function () {
             let href = new URL(request_url);
-            if(field.value!=="") {
+            if (field.value !== "") {
                 href.searchParams.set(label, "%" + field.value + "%");
-            } else  {
+            } else {
                 href.searchParams.delete(label)
             }
             request_url = href;
@@ -228,6 +229,7 @@ function init_input_fields_dates(field) {
         }, 800)
     })
 }
+
 init_input_fields_salary(salary_field_min)
 init_input_fields_salary(salary_field_max)
 init_input_fields_dates(hire_date_field_max)

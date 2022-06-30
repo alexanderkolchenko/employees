@@ -67,6 +67,7 @@ public class EditEmployeeServlet extends HttpServlet {
         try {
             employeeDao.updateEmployees(employee);
         } catch (SQLException e) {
+            e.printStackTrace();
             log.error("Error of connection while updating employee: {} ", e.getMessage());
             response.sendRedirect("/employees_war_exploded/error_page.jsp");
             return;

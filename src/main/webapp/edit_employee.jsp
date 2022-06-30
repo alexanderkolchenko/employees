@@ -71,6 +71,9 @@
         </select>
         <br>
         <br>
+        <input type="number" id="salary" name="salary" value="<c:out value="${employee.salary}"/>" required><br>
+        <input type="date" id="hire_date" name="hire_date" value="<c:out value="${employee.hireDate}"/>" required><br>
+        <br>
         <button type="submit">Save Change</button>
         <br>
         <a href="/employees_war_exploded/delete_employee_servlet/${employee.id}"><input id="delete" type="button"

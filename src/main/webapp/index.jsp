@@ -81,11 +81,9 @@
         if (s != null) {
             String column = "e_" + s.substring(0, s.lastIndexOf("_"));
             String sort = s.substring(s.lastIndexOf("_") + 1);
-            System.out.println(column);
-            System.out.println(sort);
             employees = dao.getEmployeesByFilter2(params, offset, limit, column, sort);
         } else {
-            System.out.println("def filter");
+            System.out.println("default filter");
             employees = dao.getEmployeesByFilter2(params, offset, limit, "e_id", "ASC");
         }
 
