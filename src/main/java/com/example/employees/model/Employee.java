@@ -1,4 +1,7 @@
 package com.example.employees.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 
 
@@ -10,6 +13,8 @@ public class Employee {
     private String position;
     private String email;
     private String city;
+    private BigDecimal salary;
+    private LocalDate hireDate;
 
     public String getName() {
         return name;
@@ -57,6 +62,22 @@ public class Employee {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    public LocalDate getHireDate() {
+        return hireDate;
+    }
+
+    public void setHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
     }
 
     @Override

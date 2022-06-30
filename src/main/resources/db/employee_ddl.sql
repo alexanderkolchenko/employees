@@ -6,7 +6,9 @@ CREATE TABLE employee
     e_surname VARCHAR(100) NOT NULL,
     e_position VARCHAR(50) NOT NULL,
     e_email VARCHAR(50) NOT NULL UNIQUE,
-    e_city VARCHAR(50) NULL
+    e_city VARCHAR(50) NULL,
+    e_salary numeric NULL,
+    e_hire_date date NULL
 );
 
 select  * from employee;

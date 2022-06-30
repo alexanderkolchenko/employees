@@ -11,6 +11,9 @@ td, th {
     padding: 8px;
 }
 
+.td_salary, .td_hire_date {
+    text-align: right;
+}
 
 footer {
     position: absolute;
@@ -28,7 +31,7 @@ button {
 .default_sort_buttons,
 .ascending_sort_buttons,
 .descending_sort_buttons {
-    padding-left: 20%;
+    padding-left: 10%;
     filter: invert(50%);
     width: 14px;
 }
@@ -84,8 +87,10 @@ button {
 }
 
 #pages_div {
-    padding-top: 20px;
+    padding-top: 10px;
     text-align: center;
     margin: auto;
-    width: 50%;
+    width: 100%;
+    position:absolute;
+    top: 400px;
 }
