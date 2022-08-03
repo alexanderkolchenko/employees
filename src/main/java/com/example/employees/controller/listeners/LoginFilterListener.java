@@ -3,13 +3,13 @@ package com.example.employees.controller.listeners;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
-import java.util.EnumSet;
 
 @WebListener
 public class LoginFilterListener implements ServletContextListener, HttpSessionListener, HttpSessionAttributeListener {
 
     public LoginFilterListener() {
     }
+
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {

@@ -6,6 +6,7 @@ import com.example.employees.model.Employee;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,8 +33,9 @@ public class EmployeeDaoTest {
         employee.setEmail("bolton@mail.com");
         employee.setPosition("tester");
         employee.setCity("NY");
+        employee.setSalary(BigDecimal.valueOf(50000));
+        employee.setHireDate(LocalDate.of(2015, 12, 11));
     }
-
 
     @BeforeEach
     public void setUp() throws URISyntaxException, IOException, SQLException {
@@ -59,8 +62,6 @@ public class EmployeeDaoTest {
         employeeDao.deleteEmployeeByID("1");
         Assertions.assertEquals(Optional.empty(), employeeDao.getEmployeeByID("1"));
         Assertions.assertEquals(1, employeeDao.getEmployeesList().size());
-
-        //todo connection is valid, is closed
     }
 
     @Test
@@ -72,6 +73,8 @@ public class EmployeeDaoTest {
         newEmployee.setEmail("bolton@mail.com");
         newEmployee.setPosition("tester");
         newEmployee.setCity("NY");
+        newEmployee.setSalary(BigDecimal.valueOf(17000));
+        newEmployee.setHireDate(LocalDate.of(2015, 12, 25));
         employeeDao.updateEmployees(newEmployee);
         Assertions.assertEquals("Tomas", employeeDao.getEmployeeByID("1").get().getName());
     }
